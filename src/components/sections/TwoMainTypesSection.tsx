@@ -10,13 +10,13 @@ const mainTypes = [
   {
     name: "Lốp Đi Rừng",
     description: "Khả năng chống cắt chém, bám đường vượt trội trên địa hình hiểm trở.",
-    href: "/lop-di-rung",
+    href: "/gai?type=di-rung",
     // can add a background image style here
   },
   {
     name: "Lốp Đi Ruộng",
     description: "Thiết kế gai đặc biệt giúp thoát bùn nhanh, tăng sức kéo trên nền đất yếu.",
-    href: "/lop-di-ruong",
+    href: "/gai?type=di-ruong",
     // can add a background image style here
   },
 ];
