@@ -21,7 +21,7 @@ Sơ đồ kiến trúc triển khai (Next.js + Headless CMS):
           v                                   v
 +-------------------+               +-------------------+
 |   Headless CMS    |               |   File Storage    |
-|  (Strapi/Directus)|               |  (Cloudinary/S3)  |
+|     (Strapi)      |               |  (Cloudinary/S3)  |
 |  Quản lý sản phẩm |               |   Ảnh sản phẩm    |
 +---------+---------+               +-------------------+
           |
@@ -46,7 +46,7 @@ Tóm tắt kế hoạch phát triển (Roadmap)
 Phase 1: Landing Page + CMS cơ bản (2–3 tuần)
 Setup domain + hosting.
 Next.js frontend: giới thiệu công ty, sản phẩm, loại lốp.
-CMS (Strapi/Directus): CRUD sản phẩm (tên, loại, giá, ảnh).
+CMS (Strapi): CRUD sản phẩm (tên, loại, giá, ảnh).
 Kết nối DB (Supabase) và storage (Cloudinary).
 Admin login để update nội dung.
 
@@ -69,7 +69,7 @@ Yêu cầu của Phase 1 như sau:
 
 1. Kiến trúc hệ thống:
 - Frontend: Next.js (host trên Vercel).
-- CMS: Strapi hoặc Directus (host trên Render).
+- CMS: Strapi (host trên Render).
 - Database: PostgreSQL (dùng Supabase).
 - Storage: Cloudinary để lưu ảnh sản phẩm.
 - Domain: mua, trỏ về Vercel.
@@ -113,64 +113,81 @@ Step 1 → Step 2 → Step 3…
 
 ---
 
-5. Nhật ký công việc đã thực hiện (Frontend - Giao diện)
+### 5. Nhật ký công việc đã thực hiện (Frontend)
 
 - **Setup Môi trường:**
   + Khởi tạo dự án Next.js 15.5 (Turbopack) với TypeScript, Tailwind CSS.
   + Cài đặt và cấu hình thư viện component `shadcn/ui`.
   + Sửa lỗi Hydration Mismatch mặc định và cấu hình `next.config.mjs` cho ảnh ngoại tuyến.
 
-- **Xây dựng Layout & Component chung:**
+- **Xây dựng Layout & Component:**
   + Tạo cấu trúc layout chính với Header (logo, navigation) và Footer (thông tin công ty).
-  + Dọn dẹp code mặc định của Next.js.
+  + Xây dựng các section cho trang chủ: Hero, TwoMainTypes, TreadPatterns, Contact.
+  + Tạo trang động tại `/gai/[slug]` cho chi tiết sản phẩm.
+  + Tinh chỉnh UX/UI liên tục dựa trên phản hồi.
 
-- **Xây dựng các Section cho Trang chủ:**
-  + **Hero Section:** Phần giới thiệu chính với tiêu đề, mô tả và 2 nút kêu gọi hành động.
-  + **TwoMainTypes Section:** Section giới thiệu 2 dòng lốp chính (Đi Rừng, Đi Ruộng) thay cho thiết kế cũ.
-  + **TreadPatterns Section:** Grid hiển thị các loại gai lốp (sản phẩm chính), mỗi thẻ sản phẩm là một liên kết tới trang chi tiết.
-  + **Contact Section:** Form liên hệ cơ bản với các trường thông tin và bản đồ placeholder.
-
-- **Xây dựng Trang Chi Tiết Sản Phẩm:**
-  + Tạo trang động tại `/gai/[slug]`.
-  + Hiển thị thông tin chi tiết của loại gai (ảnh, mô tả).
-  + Hiển thị bảng danh sách các mẫu mã/kích thước có sẵn cho loại gai đó.
-
-- **Tinh chỉnh UX/UI:**
-  + Liên tục cải thiện giao diện dựa trên phản hồi: sửa lỗi style nút bấm, điều chỉnh hiệu ứng hover cho thẻ sản phẩm, loại bỏ các thành phần thừa để tăng trải nghiệm người dùng.
-
-- **Cập nhật dữ liệu & Cải thiện UX:**
-  + Thay thế toàn bộ dữ liệu giả (mock data) cho 17 loại gai lốp bằng dữ liệu thật được cung cấp từ file Excel.
-  + Tinh chỉnh lại section "Các Loại Gai Phổ Biến" trên trang chủ để chỉ hiển thị 6 loại gai, giúp giao diện gọn gàng hơn.
-  + Tạo trang mới `/gai` để liệt kê tất cả sản phẩm, kèm theo nút "Xem Tất Cả" ở trang chủ để điều hướng.
-  + Tái cấu trúc component `TreadPatternsSection` để có thể tái sử dụng ở cả trang chủ và trang `/gai`.
-  + Sửa các lỗi build phát sinh trong quá trình phát triển.
-
-- **Cập nhật thông tin công ty & Hướng dẫn triển khai:**
-  + Thay thế tên công ty cũ bằng "EUROMA TIRE" ở các vị trí như tiêu đề trang, mô tả, Header, Footer và Hero Section.
-  + Hướng dẫn chi tiết các bước triển khai frontend lên Vercel thông qua GitHub, bao gồm cả xử lý lỗi thường gặp khi deploy.
-
-- **Hoàn thiện Chức năng & Tái cấu trúc Dữ liệu:**
+- **Cải thiện UX & Tái cấu trúc:**
+  + Thay thế toàn bộ dữ liệu giả (mock data) bằng dữ liệu thật.
+  + Tinh chỉnh lại section "Các Loại Gai Phổ Biến" trên trang chủ để chỉ hiển thị 6 loại gai.
+  + Tạo trang mới `/gai` để liệt kê tất cả sản phẩm.
+  + Tái cấu trúc component `TreadPatternsSection` để tái sử dụng.
   + Thêm chức năng lọc sản phẩm theo danh mục ("Đi Rừng", "Đi Ruộng") tại trang `/gai`.
-  + Biến các section trên trang chủ thành lối tắt (shortcut) đến trang danh sách sản phẩm đã được lọc sẵn.
-  + Cải thiện UX: Đồng bộ hóa URL với trạng thái bộ lọc để nút "Back" của trình duyệt hoạt động chính xác.
-  + Tái cấu trúc toàn bộ dữ liệu mock của sản phẩm vào một file duy nhất (`src/lib/data.ts`) để đảm bảo tính nhất quán và dễ bảo trì.
-  + Sửa các lỗi phát sinh liên quan đến dữ liệu và build-time.
+  + Tái cấu trúc toàn bộ dữ liệu mock vào một file duy nhất (`src/lib/data.ts`).
 
-6. Nhật ký công việc đã thực hiện (Backend - CMS)
+- **Kết nối API & Hoàn thiện:**
+  + Tạo service `strapi.ts` để quản lý tất cả các lệnh gọi API đến backend.
+  + Chuyển đổi các component và trang (`TreadPatternsSection`, `/gai`, `/gai/[slug]`) thành `async` để fetch dữ liệu từ Strapi.
+  + Thay thế toàn bộ mock data bằng dữ liệu thật từ API.
+  + Tối ưu hóa API call cho trang chi tiết sản phẩm, chỉ fetch sản phẩm cần thiết.
+  + Sửa các lỗi build của Vercel liên quan đến ESLint (`no-unused-vars`, `no-explicit-any`) và TypeScript (`Type 'string' is not assignable to...`).
+  + Cấu hình biến môi trường `NEXT_PUBLIC_STRAPI_API_URL` trên Vercel để kết nối với backend production.
+  + Deploy thành công phiên bản hoàn chỉnh lên Vercel.
 
-- **Cài đặt Môi trường:**
-  + Hướng dẫn cài đặt và cấu hình `nvm` để quản lý phiên bản Node.js, giải quyết các vấn đề không tương thích.
-  + Cài đặt thành công Strapi v5 và hướng dẫn cách chạy/quản lý tiến trình Strapi trong môi trường phát triển (bao gồm cả `pm2` và chạy thủ công).
+- **Tinh chỉnh UI/UX cho Di động:**
+  + Thiết lập môi trường dev: Cấu hình frontend để kết nối với backend local.
+  + Cải thiện Header cho di động: Thay thế menu ngang bằng menu sổ xuống (collapsible dropdown) thân thiện hơn.
+  + Tối ưu Lưới sản phẩm: Chốt layout 1 cột trên di động (`md:grid-cols-2`) để sản phẩm hiển thị rõ ràng.
+  + Tinh chỉnh Hero Section: Điều chỉnh padding responsive cho cân đối.
+
+### 6. Nhật ký công việc đã thực hiện (Backend & Deployment)
+
+- **Cài đặt Môi trường Local:**
+  + Hướng dẫn cài đặt và cấu hình `nvm` để quản lý phiên bản Node.js.
+  + Cài đặt thành công Strapi v5.
 
 - **Xây dựng Cấu trúc Dữ liệu (Content Modeling):**
-  + Hướng dẫn chi tiết cách tạo Content-Type `Loại lốp`.
-  + Hướng dẫn sử dụng tính năng Component của Strapi để tạo `Mẫu mã`, cho phép quản lý các thông số kỹ thuật phức tạp của sản phẩm.
-  + Hướng dẫn tạo Content-Type `Sản phẩm` và thực hiện liên kết (Relation) chính xác tới `Loại lốp` và `Mẫu mã` (dạng Repeating Component), đảm bảo cấu trúc dữ liệu khớp với yêu cầu.
+  + Hướng dẫn tạo Content-Type `Loại lốp`.
+  + Hướng dẫn sử dụng Component để tạo `Mẫu mã`.
+  + Hướng dẫn tạo Content-Type `Sản phẩm` và liên kết (Relation) tới `Loại lốp` và `Mẫu mã`.
 
-- **Khởi tạo Dữ liệu (Data Seeding):**
-  + Hướng dẫn cấu hình quyền truy cập API chi tiết (Public Role cho quyền đọc và Full-access API Token cho quyền ghi).
-  + Viết và gỡ lỗi thành công kịch bản `seed.js` để tự động chuyển toàn bộ 17 sản phẩm từ mock data vào Strapi, giúp tiết kiệm thời gian nhập liệu.
+- **Tái cấu trúc Repository:**
+  + Hướng dẫn hợp nhất repository `frontend` vào repository gốc của dự án (`JOB`).
+  + Xử lý các vấn đề về nested repository và submodule để có một monorepo chuẩn, cho phép deploy dễ dàng.
 
-**Tình trạng:**
-- **Frontend:** Hoàn thiện, sẵn sàng kết nối API.
-- **Backend:** Strapi đã được cài đặt, cấu trúc dữ liệu đã được xây dựng khớp với yêu cầu. Toàn bộ dữ liệu đã được nhập vào CMS và sẵn sàng để được cung cấp qua API. 
+- **Triển khai Backend lên Render:**
+  + Hướng dẫn cấu hình Strapi cho môi trường production (`database.ts`, `server.ts`).
+  + Hướng dẫn lấy thông tin kết nối từ database PostgreSQL trên Supabase.
+  + Hướng dẫn chi tiết các bước deploy lên Render: cài đặt Root Directory, Build/Start commands, và các biến môi trường (Database, Security Keys, Node Version).
+
+- **Gỡ lỗi Deployment & Môi trường Local:**
+  + Xử lý lỗi `ENOENT: package.json not found` do cấu hình sai Root Directory trên Render.
+  + Xử lý lỗi `Cannot find module 'pg'` bằng cách thêm `pg` vào dependencies của backend.
+  + Xử lý lỗi kết nối mạng `ENETUNREACH` (lỗi IPv6) bằng cách chuyển sang dùng Connection Pooler của Supabase, cập nhật lại `DATABASE_HOST`, `DATABASE_PORT`, và `DATABASE_USERNAME`.
+  + Gỡ lỗi Strapi local: Tạm vô hiệu hóa Cloudinary provider ở môi trường dev để server có thể khởi động.
+
+- **Hoàn thiện dữ liệu Production:**
+  + Hướng dẫn tạo dữ liệu ban đầu cho `Loại lốp` trên Strapi production.
+  + Hướng dẫn cấp quyền Public cho API của `Loại lốp` và `Sản phẩm` để frontend và seed script có thể truy cập.
+  + Hướng dẫn chạy lại `seed.js` để thêm toàn bộ 17 sản phẩm vào database production.
+  + Gỡ lỗi script `seed.js` (sửa lỗi URL sai, xử lý API không trả về dữ liệu do thiếu quyền/dữ liệu).
+
+### 7. Tình trạng hiện tại & Bước tiếp theo
+
+- **Frontend:** Đã hoàn thiện giao diện, kết nối thành công với backend production và đã được deploy lên Vercel tại địa chỉ `https://euroma-tire.vercel.app`.
+- **Backend:** Đã được cấu hình, deploy thành công lên Render tại địa chỉ `https://euroma-tire.onrender.com`, và đã có đầy đủ dữ liệu sản phẩm.
+- **Trạng thái Phase 1:** **Hoàn thành.**
+
+- **Bước tiếp theo:**
+  1.  **Tích hợp Cloudinary:** Thay thế lưu trữ ảnh mặc định bằng Cloudinary để quản lý hình ảnh chuyên nghiệp hơn.
+  2.  **Trỏ Domain:** Hướng dẫn trỏ domain đã mua (ví dụ: từ Namecheap) vào trang web trên Vercel.
+  3.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.

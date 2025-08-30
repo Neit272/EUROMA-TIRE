@@ -7,7 +7,7 @@ const HeroSection = () => {
       {/* Background Image Placeholder */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
-      <div className="container mx-auto px-4 py-32 relative z-10 text-center">
+      <div className="container mx-auto px-4 py-20 md:py-28 lg:py-32 relative z-10 text-center">
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
           Giải Pháp Lốp Xe Toàn Diện
         </h1>

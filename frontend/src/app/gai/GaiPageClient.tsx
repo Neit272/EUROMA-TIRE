@@ -48,7 +48,7 @@ export default function GaiPageClient({ products }: GaiPageClientProps) {
             Khám phá toàn bộ các loại gai lốp chất lượng cao của chúng tôi.
           </p>
         </div>
-        <div className="flex justify-center gap-4 mb-8">
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
           <Button variant={filter === 'all' ? 'default' : 'outline'} onClick={() => handleFilterChange('all')}>Tất Cả</Button>
           <Button variant={filter === 'di-ruong' ? 'default' : 'outline'} onClick={() => handleFilterChange('di-ruong')}>Lốp Đi Ruộng</Button>
           <Button variant={filter === 'di-rung' ? 'default' : 'outline'} onClick={() => handleFilterChange('di-rung')}>Lốp Đi Rừng</Button>
@@ -57,7 +57,7 @@ export default function GaiPageClient({ products }: GaiPageClientProps) {
 
       <section id="products" className="pb-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPatterns.map((pattern) => (
               <Link href={`/gai/${pattern.id}`} key={pattern.id} className="block group">
                 <Card className="flex flex-col overflow-hidden h-full transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
