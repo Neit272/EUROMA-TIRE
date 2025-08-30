@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { treadPatterns } from '@/lib/data';
+import { TreadPattern } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,8 +14,11 @@ const categoryMap: { [key: string]: string } = {
   'di-ruong': 'Đi Ruộng',
 };
 
-// We create the main content as a separate component to use useSearchParams
-function AllTreadsPageContent() {
+interface GaiPageClientProps {
+  products: TreadPattern[];
+}
+
+export default function GaiPageClient({ products }: GaiPageClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialType = searchParams.get('type') || 'all';
@@ -30,11 +33,11 @@ function AllTreadsPageContent() {
 
   const filteredPatterns = useMemo(() => {
     if (filter === 'all') {
-      return treadPatterns;
+      return products;
     }
     const category = categoryMap[filter];
-    return treadPatterns.filter(p => p.type === category);
-  }, [filter]);
+    return products.filter(p => p.type === category);
+  }, [filter, products]);
 
   return (
     <main>
@@ -84,13 +87,4 @@ function AllTreadsPageContent() {
       </section>
     </main>
   );
-}
-
-// The main export uses Suspense to wait for client-side rendering
-export default function AllTreadsPage() {
-    return (
-        <Suspense fallback={<div>Đang tải...</div>}>
-            <AllTreadsPageContent />
-        </Suspense>
-    )
 }

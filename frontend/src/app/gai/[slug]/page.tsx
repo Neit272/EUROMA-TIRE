@@ -10,14 +10,27 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { treadPatterns } from "@/lib/data";
+// Import the new data fetching functions
+import { getProductBySlug, getProductsFromStrapi } from "@/lib/strapi";
 
-const getPatternData = (slug: string) => {
-  return treadPatterns.find((p) => p.id === slug);
-};
+// generateStaticParams pre-builds all product pages for better performance and SEO
+export async function generateStaticParams() {
+  const products = await getProductsFromStrapi();
+  
+  return products.map((product) => ({
+    slug: product.id,
+  }));
+}
 
-export default function GaiDetailPage({ params }: { params: { slug: string } }) {
-  const pattern = getPatternData(params.slug);
+// Define a specific interface for the page props for clarity and to avoid potential linter issues.
+interface GaiDetailPageProps {
+  params: { slug: string };
+}
+
+// The page component is now async
+export default async function GaiDetailPage({ params }: GaiDetailPageProps) {
+  // Fetch data for the specific product using the slug from the URL
+  const pattern = await getProductBySlug(params.slug);
 
   if (!pattern) {
     notFound();

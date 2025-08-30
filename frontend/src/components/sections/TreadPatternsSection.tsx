@@ -6,14 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { treadPatterns } from "@/lib/data";
+import { getProductsFromStrapi } from "@/lib/strapi";
 
 interface TreadPatternsSectionProps {
   showAll?: boolean;
 }
 
-export const TreadPatternsSection = ({ showAll = false }: TreadPatternsSectionProps) => {
-  const patternsToShow = showAll ? treadPatterns : treadPatterns.slice(0, 6);
+// Converted to an async component to fetch data
+export const TreadPatternsSection = async ({ showAll = false }: TreadPatternsSectionProps) => {
+  const allProducts = await getProductsFromStrapi();
+  const patternsToShow = showAll ? allProducts : allProducts.slice(0, 6);
 
   return (
     <section id="products" className="py-16 bg-gray-50">

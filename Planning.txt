@@ -1,0 +1,176 @@
+Sơ đồ kiến trúc triển khai (Next.js + Headless CMS):
+
+                  +-------------------+
+                  |   Khách hàng      |
+                  |  (Truy cập web)   |
+                  +---------+---------+
+                            |
+                            v
+                  +-------------------+
+                  |   Domain (DNS)    |
+                  +---------+---------+
+                            |
+                            v
+                +-----------+-----------+
+                |   Frontend (Next.js)  |
+                |  Landing Page + UI/UX |
+                +-----------+-----------+
+                            |
+          ------------------+------------------
+          |                                   |
+          v                                   v
++-------------------+               +-------------------+
+|   Headless CMS    |               |   File Storage    |
+|  (Strapi/Directus)|               |  (Cloudinary/S3)  |
+|  Quản lý sản phẩm |               |   Ảnh sản phẩm    |
++---------+---------+               +-------------------+
+          |
+          v
++-------------------+
+|   Database (SQL)  | <-- Supabase / PostgreSQL
+|   Lưu dữ liệu     |
++-------------------+
+
+
+
+Flow:
+User truy cập domain → trỏ về frontend (Vercel).
+Frontend fetch dữ liệu từ CMS API (Render).
+CMS lấy dữ liệu từ DB và ảnh từ Cloudinary.
+Admin (doanh nghiệp) login vào CMS để update sản phẩm → frontend auto update (ISR).
+
+
+
+Tóm tắt kế hoạch phát triển (Roadmap)
+
+Phase 1: Landing Page + CMS cơ bản (2–3 tuần)
+Setup domain + hosting.
+Next.js frontend: giới thiệu công ty, sản phẩm, loại lốp.
+CMS (Strapi/Directus): CRUD sản phẩm (tên, loại, giá, ảnh).
+Kết nối DB (Supabase) và storage (Cloudinary).
+Admin login để update nội dung.
+
+Phase 2: Catalog nâng cao (1–2 tháng)
+Bộ lọc sản phẩm (theo loại xe, size, giá).
+Tối ưu SEO (meta tags, sitemap, SSR).
+Tích hợp analytics (GA4, Hotjar).
+Tự động tối ưu ảnh (Cloudinary).
+
+Phase 3: E-commerce mở rộng (6–12 tháng, khi doanh nghiệp sẵn sàng)
+Thêm giỏ hàng + thanh toán online (Stripe/Momo/ZaloPay).
+Quản lý đơn hàng trong CMS.
+Email marketing (SendGrid/Mailchimp).
+Tích hợp CRM/ERP nếu doanh nghiệp cần quản lý khách hàng & kho.
+
+
+
+Tôi đang triển khai Phase 1 cho dự án landing page sản phẩm (lốp xe tải, xe máy cày).
+Yêu cầu của Phase 1 như sau:
+
+1. Kiến trúc hệ thống:
+- Frontend: Next.js (host trên Vercel).
+- CMS: Strapi hoặc Directus (host trên Render).
+- Database: PostgreSQL (dùng Supabase).
+- Storage: Cloudinary để lưu ảnh sản phẩm.
+- Domain: mua, trỏ về Vercel.
+
+2. Yêu cầu tính năng:
+- Landing page giới thiệu công ty, các loại lốp, danh sách sản phẩm.
+- Tích hợp CMS để admin (doanh nghiệp) có thể login và cập nhật sản phẩm:
+  (tên, loại lốp, size, giá, mô tả, hình ảnh).
+- Frontend fetch dữ liệu qua API từ CMS (REST hoặc GraphQL).
+- Khi admin update nội dung, frontend tự động cập nhật bằng ISR (Incremental Static Regeneration).
+- Responsive UI (desktop + mobile).
+- Chuẩn SEO cơ bản (meta tags, sitemap).
+
+3. Nhiệm vụ:
+Chính:
+- Viết code hoàn chỉnh bằng Next.js + TailwindCSS + shadcn/ui cho layout landing page:
+  + Header (logo + navigation).
+  + Hero section (giới thiệu công ty).
+  + Danh mục loại lốp.
+  + Grid sản phẩm.
+  + Form liên hệ cơ bản.
+  + Footer.
+- Hướng dẫn triển khai ISR trong Next.js để web tự update khi có thay đổi từ CMS.
+Phụ:
+- Hướng dẫn tôi setup toàn bộ môi trường (Vercel, Render, Supabase, Cloudinary, domain).
+- Viết hướng dẫn cấu hình Strapi CMS với Content Types:
+  + Loại lốp (name, description).
+  + Sản phẩm (name, size, price, description, image, loại lốp liên kết).
+- Hướng dẫn tôi connect Next.js với Strapi API và hiển thị danh sách sản phẩm trên landing page.
+- Hướng dẫn connect domain từ Namecheap vào Vercel.
+
+4. Output mong muốn:
+- Checklist từng bước triển khai (theo thứ tự).
+- Code mẫu cho frontend (Next.js + Tailwind).
+- Cấu hình Strapi CMS.
+- Hướng dẫn deploy tất cả services (Vercel, Render, Supabase, Cloudinary).
+- Hướng dẫn trỏ domain từ Namecheap về Vercel.
+
+Hãy trình bày theo format rõ ràng:
+Step 1 → Step 2 → Step 3…
+
+---
+
+5. Nhật ký công việc đã thực hiện (Frontend - Giao diện)
+
+- **Setup Môi trường:**
+  + Khởi tạo dự án Next.js 15.5 (Turbopack) với TypeScript, Tailwind CSS.
+  + Cài đặt và cấu hình thư viện component `shadcn/ui`.
+  + Sửa lỗi Hydration Mismatch mặc định và cấu hình `next.config.mjs` cho ảnh ngoại tuyến.
+
+- **Xây dựng Layout & Component chung:**
+  + Tạo cấu trúc layout chính với Header (logo, navigation) và Footer (thông tin công ty).
+  + Dọn dẹp code mặc định của Next.js.
+
+- **Xây dựng các Section cho Trang chủ:**
+  + **Hero Section:** Phần giới thiệu chính với tiêu đề, mô tả và 2 nút kêu gọi hành động.
+  + **TwoMainTypes Section:** Section giới thiệu 2 dòng lốp chính (Đi Rừng, Đi Ruộng) thay cho thiết kế cũ.
+  + **TreadPatterns Section:** Grid hiển thị các loại gai lốp (sản phẩm chính), mỗi thẻ sản phẩm là một liên kết tới trang chi tiết.
+  + **Contact Section:** Form liên hệ cơ bản với các trường thông tin và bản đồ placeholder.
+
+- **Xây dựng Trang Chi Tiết Sản Phẩm:**
+  + Tạo trang động tại `/gai/[slug]`.
+  + Hiển thị thông tin chi tiết của loại gai (ảnh, mô tả).
+  + Hiển thị bảng danh sách các mẫu mã/kích thước có sẵn cho loại gai đó.
+
+- **Tinh chỉnh UX/UI:**
+  + Liên tục cải thiện giao diện dựa trên phản hồi: sửa lỗi style nút bấm, điều chỉnh hiệu ứng hover cho thẻ sản phẩm, loại bỏ các thành phần thừa để tăng trải nghiệm người dùng.
+
+- **Cập nhật dữ liệu & Cải thiện UX:**
+  + Thay thế toàn bộ dữ liệu giả (mock data) cho 17 loại gai lốp bằng dữ liệu thật được cung cấp từ file Excel.
+  + Tinh chỉnh lại section "Các Loại Gai Phổ Biến" trên trang chủ để chỉ hiển thị 6 loại gai, giúp giao diện gọn gàng hơn.
+  + Tạo trang mới `/gai` để liệt kê tất cả sản phẩm, kèm theo nút "Xem Tất Cả" ở trang chủ để điều hướng.
+  + Tái cấu trúc component `TreadPatternsSection` để có thể tái sử dụng ở cả trang chủ và trang `/gai`.
+  + Sửa các lỗi build phát sinh trong quá trình phát triển.
+
+- **Cập nhật thông tin công ty & Hướng dẫn triển khai:**
+  + Thay thế tên công ty cũ bằng "EUROMA TIRE" ở các vị trí như tiêu đề trang, mô tả, Header, Footer và Hero Section.
+  + Hướng dẫn chi tiết các bước triển khai frontend lên Vercel thông qua GitHub, bao gồm cả xử lý lỗi thường gặp khi deploy.
+
+- **Hoàn thiện Chức năng & Tái cấu trúc Dữ liệu:**
+  + Thêm chức năng lọc sản phẩm theo danh mục ("Đi Rừng", "Đi Ruộng") tại trang `/gai`.
+  + Biến các section trên trang chủ thành lối tắt (shortcut) đến trang danh sách sản phẩm đã được lọc sẵn.
+  + Cải thiện UX: Đồng bộ hóa URL với trạng thái bộ lọc để nút "Back" của trình duyệt hoạt động chính xác.
+  + Tái cấu trúc toàn bộ dữ liệu mock của sản phẩm vào một file duy nhất (`src/lib/data.ts`) để đảm bảo tính nhất quán và dễ bảo trì.
+  + Sửa các lỗi phát sinh liên quan đến dữ liệu và build-time.
+
+6. Nhật ký công việc đã thực hiện (Backend - CMS)
+
+- **Cài đặt Môi trường:**
+  + Hướng dẫn cài đặt và cấu hình `nvm` để quản lý phiên bản Node.js, giải quyết các vấn đề không tương thích.
+  + Cài đặt thành công Strapi v5 và hướng dẫn cách chạy/quản lý tiến trình Strapi trong môi trường phát triển (bao gồm cả `pm2` và chạy thủ công).
+
+- **Xây dựng Cấu trúc Dữ liệu (Content Modeling):**
+  + Hướng dẫn chi tiết cách tạo Content-Type `Loại lốp`.
+  + Hướng dẫn sử dụng tính năng Component của Strapi để tạo `Mẫu mã`, cho phép quản lý các thông số kỹ thuật phức tạp của sản phẩm.
+  + Hướng dẫn tạo Content-Type `Sản phẩm` và thực hiện liên kết (Relation) chính xác tới `Loại lốp` và `Mẫu mã` (dạng Repeating Component), đảm bảo cấu trúc dữ liệu khớp với yêu cầu.
+
+- **Khởi tạo Dữ liệu (Data Seeding):**
+  + Hướng dẫn cấu hình quyền truy cập API chi tiết (Public Role cho quyền đọc và Full-access API Token cho quyền ghi).
+  + Viết và gỡ lỗi thành công kịch bản `seed.js` để tự động chuyển toàn bộ 17 sản phẩm từ mock data vào Strapi, giúp tiết kiệm thời gian nhập liệu.
+
+**Tình trạng:**
+- **Frontend:** Hoàn thiện, sẵn sàng kết nối API.
+- **Backend:** Strapi đã được cài đặt, cấu trúc dữ liệu đã được xây dựng khớp với yêu cầu. Toàn bộ dữ liệu đã được nhập vào CMS và sẵn sàng để được cung cấp qua API. 
