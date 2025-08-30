@@ -14,7 +14,7 @@ export type TreadPatternModel = {
 export type TreadPattern = {
   id: string;
   name: string;
-  type: "Đi Rừng" | "Đi Ruộng";
+  type: string;
   description: string;
   imageUrl: string;
   models: TreadPatternModel[];
