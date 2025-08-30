@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_item_mau_ma",
+  "info": {
+    "displayName": "Mẫu mã",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "sku": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string"
+    },
+    "ply": {
+      "type": "string"
+    },
+    "weight": {
+      "type": "string"
+    },
+    "diameter": {
+      "type": "string"
+    },
+    "sectionWidth": {
+      "type": "string"
+    },
+    "treadWidth": {
+      "type": "string"
+    },
+    "treadCount": {
+      "type": "string"
+    },
+    "treadDepth": {
+      "type": "string"
+    },
+    "inflationPressure": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

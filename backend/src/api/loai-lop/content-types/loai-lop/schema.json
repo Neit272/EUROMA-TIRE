@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "loai_lops",
+  "info": {
+    "singularName": "loai-lop",
+    "pluralName": "loai-lops",
+    "displayName": "Loại lốp"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "san_phams": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::san-pham.san-pham",
+      "mappedBy": "loai_lop"
+    }
+  }
+}

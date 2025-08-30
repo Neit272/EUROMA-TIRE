@@ -1,0 +1,7 @@
+/**
+ * loai-lop service
+ */
+
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreService('api::loai-lop.loai-lop');
