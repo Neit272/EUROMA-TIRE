@@ -35,7 +35,7 @@ interface StrapiImage {
   url: string;
   previewUrl: string | null;
   provider: string;
-  provider_metadata: any; // Can be more specific if needed
+  provider_metadata: unknown; // This field is not used, so 'unknown' is a safe type.
   createdAt: string;
   updatedAt: string;
 }
