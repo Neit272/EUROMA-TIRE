@@ -1,8 +1,75 @@
-
 import { TreadPattern, TreadPatternModel } from "./data";
 
+// --- START: Strapi API Type Definitions ---
+// Based on the JSON response from the Strapi API
+
+interface StrapiImageFormat {
+  name: string;
+  hash: string;
+  ext: string;
+  mime: string;
+  path: string | null;
+  width: number;
+  height: number;
+  size: number;
+  url: string;
+}
+
+interface StrapiImage {
+  id: number;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  width: number;
+  height: number;
+  formats: {
+    thumbnail: StrapiImageFormat;
+    small: StrapiImageFormat;
+    medium: StrapiImageFormat;
+    large: StrapiImageFormat;
+  };
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: string | null;
+  provider: string;
+  provider_metadata: any; // Can be more specific if needed
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface StrapiDescriptionBlock {
+  type: string;
+  children: { type: string; text: string }[];
+}
+
+interface StrapiLoaiLop {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+interface StrapiProductDataItem {
+  id: number;
+  name: string;
+  slug: string;
+  description: StrapiDescriptionBlock[];
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  loai_lop: StrapiLoaiLop;
+  imageUrl: StrapiImage | null;
+  models: TreadPatternModel[]; // This already matches our frontend model
+}
+
+// --- END: Strapi API Type Definitions ---
+
 // Helper function to safely extract text from Strapi's Rich Text field
-function extractDescription(description: any[]): string {
+function extractDescription(description: StrapiDescriptionBlock[]): string {
     if (!description || !description[0] || !description[0].children || !description[0].children[0]) {
         return "";
     }
@@ -10,7 +77,7 @@ function extractDescription(description: any[]): string {
 }
 
 // Helper function to get the full image URL
-function getImageUrl(imageData: any): string {
+function getImageUrl(imageData: StrapiImage | null): string {
     const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
     if (imageData && imageData.url) {
         // If the URL is relative, prepend the Strapi URL
@@ -43,25 +110,14 @@ export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
         const strapiResponse = await response.json();
 
         // Strapi returns data in a nested structure, so we need to map it to our desired format.
-        const products: TreadPattern[] = strapiResponse.data.map((item: any): TreadPattern => {
+        const products: TreadPattern[] = strapiResponse.data.map((item: StrapiProductDataItem): TreadPattern => {
             return {
                 id: item.slug,
                 name: item.name,
                 type: item.loai_lop?.name || "Chưa phân loại",
                 description: extractDescription(item.description),
                 imageUrl: getImageUrl(item.imageUrl),
-                models: item.models.map((model: any): TreadPatternModel => ({
-                    sku: model.sku,
-                    size: model.size,
-                    ply: model.ply,
-                    weight: model.weight,
-                    diameter: model.diameter,
-                    sectionWidth: model.sectionWidth,
-                    treadWidth: model.treadWidth,
-                    treadCount: model.treadCount,
-                    treadDepth: model.treadDepth,
-                    inflationPressure: model.inflationPressure,
-                }))
+                models: item.models // Direct mapping as the structure is the same
             };
         });
 
@@ -98,7 +154,7 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
             return null;
         }
 
-        const item = strapiResponse.data[0];
+        const item: StrapiProductDataItem = strapiResponse.data[0];
 
         // Map the single item to our TreadPattern type
         const product: TreadPattern = {
@@ -107,18 +163,7 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
             type: item.loai_lop?.name || "Chưa phân loại",
             description: extractDescription(item.description),
             imageUrl: getImageUrl(item.imageUrl),
-            models: item.models.map((model: any): TreadPatternModel => ({
-                sku: model.sku,
-                size: model.size,
-                ply: model.ply,
-                weight: model.weight,
-                diameter: model.diameter,
-                sectionWidth: model.sectionWidth,
-                treadWidth: model.treadWidth,
-                treadCount: model.treadCount,
-                treadDepth: model.treadDepth,
-                inflationPressure: model.inflationPressure,
-            }))
+            models: item.models
         };
 
         return product;
