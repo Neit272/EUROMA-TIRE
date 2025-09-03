@@ -121,7 +121,7 @@ export const MultiSelect = ({
         {isPopoverOpen && (
           <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
             <CommandGroup 
-              className="h-full overflow-auto"
+              className="h-full overflow-auto max-h-60"
               onMouseDown={(e) => {
                 e.preventDefault();
               }}
