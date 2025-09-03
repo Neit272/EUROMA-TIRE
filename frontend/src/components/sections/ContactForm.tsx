@@ -75,6 +75,7 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
       } else {
         toast.error("Gửi yêu cầu thất bại. Vui lòng thử lại sau.");
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       toast.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     } finally {

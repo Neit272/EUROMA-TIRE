@@ -1,10 +1,9 @@
 'use client';
 
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
-import { StrapiBlocksContent } from '@/lib/strapi';
+import { type BlocksContent, BlocksRenderer } from '@strapi/blocks-react-renderer';
 
 interface AboutContentProps {
-  content: StrapiBlocksContent;
+  content: BlocksContent;
 }
 
 export function AboutContent({ content }: AboutContentProps) {

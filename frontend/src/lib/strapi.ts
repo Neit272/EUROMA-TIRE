@@ -211,20 +211,12 @@ export async function submitContactForm(formData: ContactFormData): Promise<{ su
     }
 }
 
-// --- START: About Page Functions ---
-
-// Type definition for Strapi's Rich Text content (Blocks)
-export type StrapiBlock = {
-  type: string;
-  children: { type: string; text: string; [key: string]: unknown }[];
-  [key: string]: unknown;
-};
-export type StrapiBlocksContent = StrapiBlock[];
+import { type BlocksContent } from '@strapi/blocks-react-renderer';
 
 // Type definition for the processed About Page data that the frontend will use.
 export interface AboutPageContent {
   title: string;
-  content: StrapiBlocksContent;
+  content: BlocksContent;
   heroUrl: string;
 }
 

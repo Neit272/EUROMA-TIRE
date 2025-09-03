@@ -42,6 +42,7 @@ interface MultiSelectProps
   asChild?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
   (
     {
