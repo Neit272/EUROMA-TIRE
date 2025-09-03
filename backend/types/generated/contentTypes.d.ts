@@ -373,6 +373,45 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiLienHeLienHe extends Struct.CollectionTypeSchema {
+  collectionName: 'lien_hes';
+  info: {
+    displayName: 'Li\u00EAn h\u1EC7';
+    pluralName: 'lien-hes';
+    singularName: 'lien-he';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    email: Schema.Attribute.Email;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::lien-he.lien-he'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phoneNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    requestStatus: Schema.Attribute.Enumeration<
+      ['M\u1EDBi', '\u0110\u00E3 li\u00EAn h\u1EC7', 'Ho\u00E0n th\u00E0nh']
+    > &
+      Schema.Attribute.DefaultTo<'M\u1EDBi'>;
+    requestType: Schema.Attribute.Enumeration<
+      ['T\u01B0 v\u1EA5n', 'B\u00E1o gi\u00E1']
+    > &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLoaiLopLoaiLop extends Struct.CollectionTypeSchema {
   collectionName: 'loai_lops';
   info: {
@@ -433,6 +472,40 @@ export interface ApiSanPhamSanPham extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTrangGioiThieuTrangGioiThieu
+  extends Struct.SingleTypeSchema {
+  collectionName: 'trang_gioi_thieus';
+  info: {
+    displayName: 'Trang gi\u1EDBi thi\u1EC7u';
+    pluralName: 'trang-gioi-thieus';
+    singularName: 'trang-gioi-thieu';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Schema.Attribute.Blocks;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    hero: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::trang-gioi-thieu.trang-gioi-thieu'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -948,8 +1021,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::lien-he.lien-he': ApiLienHeLienHe;
       'api::loai-lop.loai-lop': ApiLoaiLopLoaiLop;
       'api::san-pham.san-pham': ApiSanPhamSanPham;
+      'api::trang-gioi-thieu.trang-gioi-thieu': ApiTrangGioiThieuTrangGioiThieu;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

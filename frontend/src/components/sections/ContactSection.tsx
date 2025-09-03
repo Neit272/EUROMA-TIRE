@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { ContactForm } from "./ContactForm";
 
 const ContactSection = () => {
   return (
@@ -26,28 +23,23 @@ const ContactSection = () => {
             <p className="text-muted-foreground mb-4">
               <strong>Điện thoại:</strong> 0123 456 789
             </p>
-            {/* Placeholder for a map */}
-            <div className="w-full h-64 bg-gray-200 mt-4 rounded-md flex items-center justify-center">
-              <p className="text-muted-foreground">Bản đồ sẽ được hiển thị ở đây</p>
+            {/* Google Maps Embed */}
+            <div className="w-full h-96 bg-gray-200 mt-4 rounded-md overflow-hidden">
+              <iframe
+                title="Bản đồ vị trí công ty"
+                src="https://maps.google.com/maps?q=Đường%2049%2C%20Tân%20Tạo%2C%20Bình%20Tân&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
           </div>
 
           {/* Contact Form */}
-          <form className="space-y-6 flex flex-col">
-            <div className="space-y-2">
-              <Label htmlFor="name">Họ và Tên</Label>
-              <Input id="name" placeholder="Nhập tên của bạn" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Số điện thoại</Label>
-              <Input id="phone" placeholder="Nhập số điện thoại" />
-            </div>
-            <div className="space-y-2 flex flex-col flex-grow">
-              <Label htmlFor="message">Nội dung tin nhắn</Label>
-              <Textarea id="message" placeholder="Bạn cần tư vấn về sản phẩm nào?" className="flex-grow" />
-            </div>
-            <Button type="submit" size="lg" className="w-full">Gửi Tin Nhắn</Button>
-          </form>
+          <ContactForm />
         </div>
       </div>
     </section>

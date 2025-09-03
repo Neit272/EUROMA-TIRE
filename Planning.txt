@@ -149,6 +149,9 @@ Step 1 → Step 2 → Step 3…
   + Tối ưu Lưới sản phẩm: Chốt layout 1 cột trên di động (`md:grid-cols-2`) để sản phẩm hiển thị rõ ràng.
   + Tinh chỉnh Hero Section: Điều chỉnh padding responsive cho cân đối.
 
+- **Tích hợp Bản đồ:**
+  + Thêm bản đồ Google Maps nhúng vào section Liên hệ để chỉ dẫn vị trí.
+
 ### 6. Nhật ký công việc đã thực hiện (Backend & Deployment)
 
 - **Cài đặt Môi trường Local:**
@@ -159,6 +162,10 @@ Step 1 → Step 2 → Step 3…
   + Hướng dẫn tạo Content-Type `Loại lốp`.
   + Hướng dẫn sử dụng Component để tạo `Mẫu mã`.
   + Hướng dẫn tạo Content-Type `Sản phẩm` và liên kết (Relation) tới `Loại lốp` và `Mẫu mã`.
+
+- **Mở rộng Content-Type cho tính năng mới:**
+  + Hướng dẫn tạo Collection-Type `Liên hệ` để lưu trữ thông tin từ form liên hệ.
+  + Hướng dẫn tạo Single-Type `Trang giới thiệu` để quản lý nội dung trang "Về chúng tôi".
 
 - **Tái cấu trúc Repository:**
   + Hướng dẫn hợp nhất repository `frontend` vào repository gốc của dự án (`JOB`).
@@ -186,6 +193,11 @@ Step 1 → Step 2 → Step 3…
 - **Frontend:** Đã hoàn thiện giao diện, kết nối thành công với backend production và đã được deploy lên Vercel tại địa chỉ `https://euroma-tire.vercel.app`.
 - **Backend:** Đã được cấu hình, deploy thành công lên Render tại địa chỉ `https://euroma-tire.onrender.com`, và đã có đầy đủ dữ liệu sản phẩm.
 - **Trạng thái Phase 1:** **Hoàn thành.**
+
+- **Bước tiếp theo:**
+  1.  **Tích hợp Cloudinary:** Thay thế lưu trữ ảnh mặc định bằng Cloudinary để quản lý hình ảnh chuyên nghiệp hơn.
+  2.  **Trỏ Domain:** Hướng dẫn trỏ domain đã mua (ví dụ: từ Namecheap) vào trang web trên Vercel.
+  3.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.
 
 - **Bước tiếp theo:**
   1.  **Tích hợp Cloudinary:** Thay thế lưu trữ ảnh mặc định bằng Cloudinary để quản lý hình ảnh chuyên nghiệp hơn.

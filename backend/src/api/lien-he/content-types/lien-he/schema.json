@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lien_hes",
+  "info": {
+    "singularName": "lien-he",
+    "pluralName": "lien-hes",
+    "displayName": "Liên hệ"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "phoneNumber": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email"
+    },
+    "requestType": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "Tư vấn",
+        "Báo giá"
+      ]
+    },
+    "description": {
+      "type": "text"
+    },
+    "requestStatus": {
+      "type": "enumeration",
+      "default": "Mới",
+      "enum": [
+        "Mới",
+        "Đã liên hệ",
+        "Hoàn thành"
+      ]
+    }
+  }
+}

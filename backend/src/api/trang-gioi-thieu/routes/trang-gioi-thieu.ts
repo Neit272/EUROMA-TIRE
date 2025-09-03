@@ -1,0 +1,7 @@
+/**
+ * trang-gioi-thieu router
+ */
+
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreRouter('api::trang-gioi-thieu.trang-gioi-thieu');

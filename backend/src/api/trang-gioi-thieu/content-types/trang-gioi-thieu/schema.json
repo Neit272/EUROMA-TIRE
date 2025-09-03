@@ -1,0 +1,31 @@
+{
+  "kind": "singleType",
+  "collectionName": "trang_gioi_thieus",
+  "info": {
+    "singularName": "trang-gioi-thieu",
+    "pluralName": "trang-gioi-thieus",
+    "displayName": "Trang giới thiệu"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "hero": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "content": {
+      "type": "blocks"
+    }
+  }
+}
