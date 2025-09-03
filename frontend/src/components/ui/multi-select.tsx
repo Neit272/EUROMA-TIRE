@@ -51,11 +51,9 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
       value = [],
       placeholder = 'Select options',
       animation = 0,
-      maxCount = 3,
       className,
-      ...props
     },
-    ref
+    _ref
   ) => {
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
@@ -166,3 +164,4 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
 );
 
 MultiSelect.displayName = 'MultiSelect';
+playName = 'MultiSelect';
