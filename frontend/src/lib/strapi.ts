@@ -41,7 +41,7 @@ interface StrapiImage {
   url: string;
   previewUrl: string | null;
   provider: string;
-  provider_metadata: any;
+  provider_metadata: { public_id: string; resource_type: string; } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -284,7 +284,7 @@ export async function getLoaiLops(): Promise<LoaiLop[]> {
 
         const strapiResponse = await response.json();
 
-        const loaiLops: LoaiLop[] = strapiResponse.data.map((item: any): LoaiLop => ({
+        const loaiLops: LoaiLop[] = strapiResponse.data.map((item: { id: number; name: string; }): LoaiLop => ({
             id: item.id,
             name: item.name,
         }));

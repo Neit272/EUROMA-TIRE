@@ -73,7 +73,7 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
       } else {
         toast.error("Gửi yêu cầu thất bại. Vui lòng thử lại sau.");
       }
-    } catch (_error) {
+    } catch {
       toast.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     } finally {
       setIsLoading(false);
