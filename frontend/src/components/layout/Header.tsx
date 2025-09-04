@@ -23,7 +23,6 @@ const Header = () => {
           <Link href="/">EUROMA TIRE</Link>
         </div>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex">
           <ul className="flex space-x-6 items-center">
             {navLinks.map(link => (
@@ -36,7 +35,6 @@ const Header = () => {
           </ul>
         </nav>
 
-        {/* Mobile Navigation (Collapsible) */}
         <div className="md:hidden">
           <Collapsible open={isOpen} onOpenChange={setIsOpen} className="relative">
             <CollapsibleTrigger asChild>

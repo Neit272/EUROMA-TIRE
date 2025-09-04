@@ -26,7 +26,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Image Column */}
         <div>
           <Image
             src={pattern.imageUrl}
@@ -37,7 +36,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
           />
         </div>
 
-        {/* Details Column */}
         <div>
           <Badge variant={pattern.type === 'Đi Rừng' ? 'destructive' : 'secondary'}>
             {pattern.type}
@@ -71,7 +69,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
         </div>
       </div>
 
-      {/* Models Table */}
       <div className="mt-16">
         <h2 className="text-3xl font-bold text-center mb-8">Bảng Thông Số Kỹ Thuật</h2>
         <div className="border rounded-lg overflow-x-auto">

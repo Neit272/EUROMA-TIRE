@@ -1,6 +1,3 @@
-// This script will seed the Strapi database with the products from the mock data file.
-
-// The product data is embedded directly in this script to avoid issues with importing .ts files in a .js environment.
 const treadPatterns = [
   {
     id: "an-do-jk",
@@ -241,7 +238,6 @@ async function getTireTypeIds() {
     throw new Error('Failed to fetch tire types. Make sure public find permission is enabled.');
   }
   const jsonResponse = await response.json();
-  // Handle both { data: [...] } and flattened [...] responses
   const data = jsonResponse.data || jsonResponse;
 
   if (!Array.isArray(data)) {
@@ -250,7 +246,6 @@ async function getTireTypeIds() {
 
   const typeMap = {};
   data.forEach(type => {
-    // Based on the logs, the data is flattened (no 'attributes' wrapper)
     if (type && type.name && type.id) {
       typeMap[type.name] = type.id;
     } else {
@@ -278,8 +273,6 @@ async function seed() {
       continue;
     }
 
-    // Strapi expects all fields in a component to be of the type defined in the component builder.
-    // Our mock data has `treadCount` as both number and string, so we ensure it's always a string before sending.
     product.models.forEach(model => {
       model.treadCount = String(model.treadCount);
     });
@@ -287,15 +280,13 @@ async function seed() {
     const payload = {
       data: {
         name: product.name,
-        slug: product.id, // Use the id from mock data as the slug
-        // Strapi's Rich Text field expects a specific block format.
+        slug: product.id,
         description: [{
           type: 'paragraph',
           children: [{ type: 'text', text: product.description }],
         }],
         loai_lop: typeId,
         models: product.models,
-        // Note: The script creates products as drafts. You need to publish them manually.
       },
     };
 

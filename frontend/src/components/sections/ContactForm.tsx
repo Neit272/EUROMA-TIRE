@@ -30,7 +30,6 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
     name: "",
     phoneNumber: "",
     email: "",
-    // If a product name is passed, default to "Báo giá"
     requestType: productName ? "Báo giá" : "",
     description: "",
   };
@@ -38,7 +37,6 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
 
-  // Effect to update the description when selected models change
   useEffect(() => {
     if (productName) {
       let descriptionText = `Tôi muốn yêu cầu báo giá cho sản phẩm: ${productName}`;
@@ -71,11 +69,10 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
         toast.success("Gửi yêu cầu thành công! Chúng tôi sẽ liên hệ với bạn sớm.");
         setFormData(initialFormState);
         setSelectedModels([]);
-        onSuccess?.(); // Call the success callback if it exists (to close the modal)
+        onSuccess?.();
       } else {
         toast.error("Gửi yêu cầu thất bại. Vui lòng thử lại sau.");
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       toast.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     } finally {
@@ -85,7 +82,6 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
-      {/* Conditional Fields for Quote Request */}
       {models && models.length > 0 && (
         <div className="space-y-2">
           <Label>Chọn mã sản phẩm (tùy chọn)</Label>
@@ -99,7 +95,6 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
         </div>
       )}
 
-      {/* Standard Fields */}
       <div className="space-y-2">
         <Label htmlFor="name">Họ và Tên *</Label>
         <Input
@@ -134,7 +129,6 @@ export const ContactForm = ({ productName, models, onSuccess }: ContactFormProps
         />
       </div>
 
-      {/* Hide Request Type if it's a product quote */}
       {!productName && (
         <div className="space-y-2">
           <Label htmlFor="requestType">Loại yêu cầu *</Label>

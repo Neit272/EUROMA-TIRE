@@ -12,7 +12,6 @@ interface TreadPatternsSectionProps {
   showAll?: boolean;
 }
 
-// Converted to an async component to fetch data
 export const TreadPatternsSection = async ({ showAll = false }: TreadPatternsSectionProps) => {
   const allProducts = await getProductsFromStrapi();
   const patternsToShow = showAll ? allProducts : allProducts.slice(0, 6);

@@ -1,8 +1,7 @@
-/*
 export default ({ env }) => ({
   upload: {
     config: {
-      provider: '@strapi/provider-upload-cloudinary',
+      provider: 'cloudinary',
       providerOptions: {
         cloud_name: env('CLOUDINARY_NAME'),
         api_key: env('CLOUDINARY_KEY'),
@@ -15,7 +14,3 @@ export default ({ env }) => ({
     },
   },
 });
-*/
-
-// Return an empty object to use the default local file provider in development
-export default {};

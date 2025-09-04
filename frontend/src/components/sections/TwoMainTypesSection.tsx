@@ -10,13 +10,11 @@ const mainTypes = [
     name: "Lốp Đi Rừng",
     description: "Khả năng chống cắt chém, bám đường vượt trội trên địa hình hiểm trở.",
     href: "/gai?type=di-rung",
-    // can add a background image style here
   },
   {
     name: "Lốp Đi Ruộng",
     description: "Thiết kế gai đặc biệt giúp thoát bùn nhanh, tăng sức kéo trên nền đất yếu.",
     href: "/gai?type=di-ruong",
-    // can add a background image style here
   },
 ];
 
@@ -28,7 +26,6 @@ const TwoMainTypesSection = () => {
           {mainTypes.map((type) => (
             <Link href={type.href} key={type.name}>
               <Card className="relative overflow-hidden group h-64 flex items-end p-6 bg-gray-800 text-white shadow-lg hover:shadow-2xl transition-all duration-300">
-                {/* Placeholder for background image */}
                 <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-50 transition-opacity"></div>
                 <div className="relative z-10">
                   <CardTitle className="text-3xl font-bold">{type.name}</CardTitle>

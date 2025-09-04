@@ -4,7 +4,6 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section className="relative bg-gray-900 text-white">
-      {/* Background Image Placeholder */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       <div className="container mx-auto px-4 py-20 md:py-28 lg:py-32 relative z-10 text-center">

@@ -11,7 +11,6 @@ const ContactSection = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Information */}
           <div>
             <h3 className="text-2xl font-bold mb-4">Thông tin công ty</h3>
             <p className="text-muted-foreground mb-2">
@@ -23,7 +22,6 @@ const ContactSection = () => {
             <p className="text-muted-foreground mb-4">
               <strong>Điện thoại:</strong> 0123 456 789
             </p>
-            {/* Google Maps Embed */}
             <div className="w-full h-96 bg-gray-200 mt-4 rounded-md overflow-hidden">
               <iframe
                 title="Bản đồ vị trí công ty"
@@ -38,7 +36,6 @@ const ContactSection = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
           <ContactForm />
         </div>
       </div>

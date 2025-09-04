@@ -1,9 +1,6 @@
 import { TreadPattern, TreadPatternModel } from "./data";
+import { type BlocksContent } from '@strapi/blocks-react-renderer';
 
-// --- START: Strapi API Type Definitions ---
-// Based on the JSON response from the Strapi API
-
-// Data structure for the contact form
 export interface ContactFormData {
   name: string;
   phoneNumber: string;
@@ -44,7 +41,7 @@ interface StrapiImage {
   url: string;
   previewUrl: string | null;
   provider: string;
-  provider_metadata: unknown; // This field is not used, so 'unknown' is a safe type.
+  provider_metadata: any;
   createdAt: string;
   updatedAt: string;
 }
@@ -71,13 +68,10 @@ interface StrapiProductDataItem {
   updatedAt: string;
   publishedAt: string;
   loai_lop: StrapiLoaiLop;
-  imageUrl: StrapiImage | null;
-  models: TreadPatternModel[]; // This already matches our frontend model
+  imageUrl: StrapiImage[];
+  models: TreadPatternModel[];
 }
 
-// --- END: Strapi API Type Definitions ---
-
-// Helper function to safely extract text from Strapi's Rich Text field
 function extractDescription(description: StrapiDescriptionBlock[]): string {
     if (!description || !description[0] || !description[0].children || !description[0].children[0]) {
         return "";
@@ -85,30 +79,47 @@ function extractDescription(description: StrapiDescriptionBlock[]): string {
     return description[0].children[0].text;
 }
 
-// Helper function to get the full image URL
-function getImageUrl(imageData: StrapiImage | null): string {
-    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
-    if (imageData && imageData.url) {
-        // If the URL is relative, prepend the Strapi URL
-        return imageData.url.startsWith('http') ? imageData.url : `${strapiUrl}${imageData.url}`;
+interface ImageOptions {
+  width: number;
+  height: number;
+  crop?: 'fill' | 'fit';
+}
+
+function getImageUrl(imageData: StrapiImage[] | null, options?: ImageOptions): string {
+    if (imageData && imageData.length > 0) {
+        const image = imageData[0];
+
+        // If it's a Cloudinary image and options are provided, build a dynamic URL
+        if (options && image.provider === 'cloudinary' && image.provider_metadata?.public_id) {
+            const urlParts = image.url.split('/');
+            const cloudNameIndex = urlParts.findIndex(part => part === 'res.cloudinary.com') + 1;
+            const cloudName = urlParts[cloudNameIndex];
+
+            if (cloudName) {
+                const crop = options.crop || 'fill';
+                // Add auto-quality (q_auto) and auto-format (f_auto) for best performance
+                const transformations = `w_${options.width},h_${options.height},c_${crop},q_auto,f_auto`;
+                return `https://res.cloudinary.com/${cloudName}/image/upload/${transformations}/${image.provider_metadata.public_id}`;
+            }
+        }
+
+        // Fallback for local dev or other providers
+        const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+        const fallbackUrl = image.formats?.medium?.url || image.url;
+        return fallbackUrl.startsWith('http') ? fallbackUrl : `${strapiUrl}${fallbackUrl}`;
     }
-    // Return a placeholder if no image is available
+    
     return "https://placehold.co/600x600/eee/fff?text=No+Image";
 }
 
-
-// This function fetches all products from Strapi and maps them to the TreadPattern type.
 export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
-    // Using the public API endpoint, no token needed.
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/san-phams?populate=*`;
 
     try {
         const response = await fetch(url, {
             method: 'GET',
-            // Implements Incremental Static Regeneration (ISR)
-            next: {
-                revalidate: 60 // Revalidate data every 60 seconds
-            }
+            // Revalidate data every 60 seconds for Incremental Static Regeneration (ISR)
+            next: { revalidate: 60 },
         });
 
         if (!response.ok) {
@@ -118,15 +129,14 @@ export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
 
         const strapiResponse = await response.json();
 
-        // Strapi returns data in a nested structure, so we need to map it to our desired format.
         const products: TreadPattern[] = strapiResponse.data.map((item: StrapiProductDataItem): TreadPattern => {
             return {
                 id: item.slug,
                 name: item.name,
                 type: item.loai_lop?.name || "Chưa phân loại",
                 description: extractDescription(item.description),
-                imageUrl: getImageUrl(item.imageUrl),
-                models: item.models // Direct mapping as the structure is the same
+                imageUrl: getImageUrl(item.imageUrl, { width: 400, height: 400 }), 
+                models: item.models,
             };
         });
 
@@ -134,21 +144,18 @@ export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
 
     } catch (error) {
         console.error("An error occurred while fetching from Strapi:", error);
-        // Return empty array or mock data in case of error to prevent build failure
+        // Return empty array in case of error to prevent build failure
         return [];
     }
 }
 
-// This function fetches a single product by its slug using an efficient filter.
 export async function getProductBySlug(slug: string): Promise<TreadPattern | null> {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/san-phams?filters[slug][$eq]=${slug}&populate=*`;
 
     try {
         const response = await fetch(url, {
             method: 'GET',
-            next: {
-                revalidate: 60 // Also apply ISR to detail pages
-            }
+            next: { revalidate: 60 },
         });
 
         if (!response.ok) {
@@ -158,21 +165,19 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
 
         const strapiResponse = await response.json();
 
-        // The filter returns an array, we need the first element.
         if (!strapiResponse.data || strapiResponse.data.length === 0) {
             return null;
         }
 
         const item: StrapiProductDataItem = strapiResponse.data[0];
 
-        // Map the single item to our TreadPattern type
         const product: TreadPattern = {
             id: item.slug,
             name: item.name,
             type: item.loai_lop?.name || "Chưa phân loại",
             description: extractDescription(item.description),
-            imageUrl: getImageUrl(item.imageUrl),
-            models: item.models
+            imageUrl: getImageUrl(item.imageUrl, { width: 600, height: 600 }), 
+            models: item.models,
         };
 
         return product;
@@ -183,7 +188,6 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
     }
 }
 
-// This function sends the contact form data to Strapi
 export async function submitContactForm(formData: ContactFormData): Promise<{ success: boolean; error?: string }> {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/lien-hes`;
 
@@ -211,20 +215,15 @@ export async function submitContactForm(formData: ContactFormData): Promise<{ su
     }
 }
 
-import { type BlocksContent } from '@strapi/blocks-react-renderer';
-
-// Type definition for the processed About Page data that the frontend will use.
 export interface AboutPageContent {
   title: string;
   content: BlocksContent;
   heroUrl: string;
 }
 
-// This function fetches content for the About Us page from Strapi.
 export async function getAboutPageContent(): Promise<AboutPageContent> {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/trang-gioi-thieu?populate=hero`;
 
-    // Default content in Strapi's block format
     const defaultContent: AboutPageContent = {
         title: "Về Chúng Tôi",
         content: [{ type: 'paragraph', children: [{ type: 'text', text: 'Nội dung đang được cập nhật. Vui lòng quay lại sau.' }] }],
@@ -248,21 +247,14 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
             return defaultContent;
         }
 
-        // Safely get the hero image URL from the flat structure.
-        const heroImageObject = (data.hero && data.hero.length > 0) 
-            ? data.hero[0] 
-            : null;
-
         return {
             title: data.title || defaultContent.title,
-            // Ensure content is not null, fall back to default if it is
             content: data.content || defaultContent.content,
-            heroUrl: getImageUrl(heroImageObject), // Reuse the existing helper for placeholder logic
+            heroUrl: getImageUrl(data.hero, { width: 1200, height: 400 }), 
         };
 
     } catch (error) {
         console.error("An error occurred while fetching the About Us page:", error);
-        // Return default content in case of any error
         return {
             ...defaultContent,
             title: "Lỗi Tải Trang",
@@ -272,4 +264,35 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
     }
 }
 
-// --- END: About Page Functions ---
+export interface LoaiLop {
+  id: number;
+  name: string;
+}
+
+export async function getLoaiLops(): Promise<LoaiLop[]> {
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/loai-lops`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            next: { revalidate: 60 },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch tire types');
+        }
+
+        const strapiResponse = await response.json();
+
+        const loaiLops: LoaiLop[] = strapiResponse.data.map((item: any): LoaiLop => ({
+            id: item.id,
+            name: item.name,
+        }));
+
+        return loaiLops;
+
+    } catch (error) {
+        console.error("An error occurred while fetching tire types:", error);
+        return [];
+    }
+}
