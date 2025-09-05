@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 const navLinks = [
     { href: "/#products", label: "Sản phẩm" },
@@ -19,8 +20,17 @@ const Header = () => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center p-4">
-        <div className="text-2xl font-bold">
-          <Link href="/">EUROMA TIRE</Link>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
+            <Image
+              src="/icon.png"
+              alt="Euroma Tire Logo"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <span className="text-xl font-bold tracking-wider">EUROMA TIRE</span>
+          </Link>
         </div>
 
         <nav className="hidden md:flex">

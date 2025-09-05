@@ -191,14 +191,19 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
 export async function submitContactForm(formData: ContactFormData): Promise<{ success: boolean; error?: string }> {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/lien-hes`;
 
+    const payload = { ...formData };
+
+    if (payload.email === '') {
+        delete payload.email;
+    }
+
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            // Strapi expects the data to be nested under a 'data' key
-            body: JSON.stringify({ data: formData }),
+            body: JSON.stringify({ data: payload }),
         });
 
         if (!response.ok) {

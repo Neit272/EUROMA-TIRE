@@ -25,7 +25,7 @@ const TwoMainTypesSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {mainTypes.map((type) => (
             <Link href={type.href} key={type.name}>
-              <Card className="relative overflow-hidden group h-64 flex items-end p-6 bg-gray-800 text-white shadow-lg hover:shadow-2xl transition-all duration-300">
+              <Card className="relative overflow-hidden group h-64 flex items-end p-6 bg-primary text-primary-foreground shadow-lg hover:shadow-2xl transition-all duration-300">
                 <div className="absolute inset-0 bg-black opacity-40 group-hover:opacity-50 transition-opacity"></div>
                 <div className="relative z-10">
                   <CardTitle className="text-3xl font-bold">{type.name}</CardTitle>

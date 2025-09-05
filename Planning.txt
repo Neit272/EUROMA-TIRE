@@ -152,6 +152,20 @@ Step 1 → Step 2 → Step 3…
 - **Tích hợp Bản đồ:**
   + Thêm bản đồ Google Maps nhúng vào section Liên hệ để chỉ dẫn vị trí.
 
+- **Tối ưu hóa và tích hợp hình ảnh Cloudinary:**
+  + Cập nhật `frontend/next.config.mjs` để cho phép domain Cloudinary.
+  + Nâng cấp hàm `getImageUrl` trong `frontend/src/lib/strapi.ts` để xử lý `imageUrl` dạng mảng và tạo URL Cloudinary với kích thước chính xác (ví dụ: 400x400 cho lưới, 600x600 cho chi tiết, 1200x400 cho hero) bằng transformation, tối ưu hiệu năng tải ảnh.
+
+- **Dọn dẹp code và sửa lỗi build:**
+  + Xóa các comment không cần thiết và comment tự sinh bởi AI trên toàn bộ các file code chính trong thư mục `frontend` (bao gồm `src/lib/strapi.ts`, `src/components/sections/*`, `src/app/gai/*`, `src/app/gai/[slug]/*`, `src/app/page.tsx`, `src/app/layout.tsx`, `src/lib/utils.ts`, `src/components/layout/*`).
+  + Khắc phục lỗi ESLint (`no-unused-vars`) trong `ContactForm.tsx` và lỗi TypeScript (`no-explicit-any`) trong `strapi.ts` để đảm bảo build thành công trên Vercel.
+
+- **Hoàn thiện UI & Sửa lỗi Form:**
+  + Thêm widget "Liên hệ nhanh" (Quick Contact) dạng nút bấm nổi ở góc màn hình, bao gồm các liên kết tới Điện thoại, Zalo, và Messenger.
+  + Tích hợp logo công ty vào Header và hướng dẫn sử dụng logo làm favicon cho trang web.
+  + Đồng bộ hóa màu sắc chủ đạo trên toàn bộ trang, áp dụng biến màu `--primary` cho các thành phần Footer, Hero Section, và các nút bấm để đảm bảo tính nhất quán (sau đó tạm hoãn chờ khách duyệt).
+  + Sửa lỗi form liên hệ: Xử lý trường hợp không nhập email bằng cách loại bỏ trường email rỗng khỏi dữ liệu gửi đi, ngăn chặn lỗi xác thực từ backend.
+
 ### 6. Nhật ký công việc đã thực hiện (Backend & Deployment)
 
 - **Cài đặt Môi trường Local:**
@@ -188,6 +202,9 @@ Step 1 → Step 2 → Step 3…
   + Hướng dẫn chạy lại `seed.js` để thêm toàn bộ 17 sản phẩm vào database production.
   + Gỡ lỗi script `seed.js` (sửa lỗi URL sai, xử lý API không trả về dữ liệu do thiếu quyền/dữ liệu).
 
+- **Dọn dẹp code backend:**
+  + Xóa các comment không cần thiết và comment tự sinh bởi AI trong các file code chính của backend (bao gồm `src/api/*` của tất cả các content type và `seed.js`, `config/*`).
+
 ### 7. Tình trạng hiện tại & Bước tiếp theo
 
 - **Frontend:** Đã hoàn thiện giao diện, kết nối thành công với backend production và đã được deploy lên Vercel tại địa chỉ `https://euroma-tire.vercel.app`.
@@ -195,11 +212,5 @@ Step 1 → Step 2 → Step 3…
 - **Trạng thái Phase 1:** **Hoàn thành.**
 
 - **Bước tiếp theo:**
-  1.  **Tích hợp Cloudinary:** Thay thế lưu trữ ảnh mặc định bằng Cloudinary để quản lý hình ảnh chuyên nghiệp hơn.
-  2.  **Trỏ Domain:** Hướng dẫn trỏ domain đã mua (ví dụ: từ Namecheap) vào trang web trên Vercel.
-  3.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.
-
-- **Bước tiếp theo:**
-  1.  **Tích hợp Cloudinary:** Thay thế lưu trữ ảnh mặc định bằng Cloudinary để quản lý hình ảnh chuyên nghiệp hơn.
-  2.  **Trỏ Domain:** Hướng dẫn trỏ domain đã mua (ví dụ: từ Namecheap) vào trang web trên Vercel.
-  3.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.
+  1.  **Trỏ Domain:** Hướng dẫn trỏ domain đã mua (ví dụ: từ Namecheap) vào trang web trên Vercel.
+  2.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.

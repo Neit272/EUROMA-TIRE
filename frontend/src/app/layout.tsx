@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { QuickContact } from "@/components/layout/QuickContact";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <Toaster richColors />
+        <QuickContact />
       </body>
     </html>
   );
