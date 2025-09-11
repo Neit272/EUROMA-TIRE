@@ -77,7 +77,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
               <TableRow>
                 <TableHead className="font-bold">MÃ SẢN PHẨM</TableHead>
                 <TableHead className="font-bold">LỐP BỐ</TableHead>
-                <TableHead className="font-bold">TRỌNG LƯỢNG</TableHead>
                 <TableHead className="font-bold">ĐƯỜNG KÍNH</TableHead>
                 <TableHead className="font-bold">RỘNG HÔNG</TableHead>
                 <TableHead className="font-bold">RỘNG LƯNG</TableHead>
@@ -91,7 +90,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
                 <TableRow key={model.sku}>
                   <TableCell>{model.sku}</TableCell>
                   <TableCell>{model.ply}</TableCell>
-                  <TableCell>{model.weight}</TableCell>
                   <TableCell>{model.diameter}</TableCell>
                   <TableCell>{model.sectionWidth}</TableCell>
                   <TableCell>{model.treadWidth}</TableCell>

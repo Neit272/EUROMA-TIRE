@@ -427,6 +427,7 @@ export interface ApiLoaiLopLoaiLop extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Blocks;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -472,6 +473,37 @@ export interface ApiSanPhamSanPham extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTrangChuTrangChu extends Struct.CollectionTypeSchema {
+  collectionName: 'trang_chus';
+  info: {
+    displayName: 'Trang ch\u1EE7';
+    pluralName: 'trang-chus';
+    singularName: 'trang-chu';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    hero: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::trang-chu.trang-chu'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1024,6 +1056,7 @@ declare module '@strapi/strapi' {
       'api::lien-he.lien-he': ApiLienHeLienHe;
       'api::loai-lop.loai-lop': ApiLoaiLopLoaiLop;
       'api::san-pham.san-pham': ApiSanPhamSanPham;
+      'api::trang-chu.trang-chu': ApiTrangChuTrangChu;
       'api::trang-gioi-thieu.trang-gioi-thieu': ApiTrangGioiThieuTrangGioiThieu;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

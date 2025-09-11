@@ -22,6 +22,16 @@
       "relation": "oneToMany",
       "target": "api::san-pham.san-pham",
       "mappedBy": "loai_lop"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

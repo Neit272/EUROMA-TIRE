@@ -31,19 +31,19 @@ export function QuickContact() {
   const contacts = [
     {
       name: 'Call',
-      href: 'tel:0987654321', // Placeholder
+      href: 'tel:0839911148',
       icon: Phone,
       bgColor: 'bg-green-500 hover:bg-green-600',
     },
     {
       name: 'Zalo',
-      href: 'https://zalo.me/0987654321', // Placeholder
+      href: 'https://zalo.me/0839911148',
       icon: ZaloIcon,
       bgColor: 'bg-blue-500 hover:bg-blue-600',
     },
     {
       name: 'Messenger',
-      href: 'https://m.me/your-facebook-page-id', // Placeholder
+      href: 'https://m.me/61558162468096',
       icon: MessengerIcon,
       bgColor: 'bg-purple-600 hover:bg-purple-700',
     },

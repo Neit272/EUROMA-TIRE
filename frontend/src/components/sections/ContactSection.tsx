@@ -14,18 +14,18 @@ const ContactSection = () => {
           <div>
             <h3 className="text-2xl font-bold mb-4">Thông tin công ty</h3>
             <p className="text-muted-foreground mb-2">
-              <strong>Địa chỉ:</strong> 123 Đường ABC, Quận 1, TP. HCM
+              <strong>Địa chỉ:</strong> Ấp Thuận Hòa 2, xã Hòa Khánh Nam, Đức Hòa, Long An
             </p>
             <p className="text-muted-foreground mb-2">
-              <strong>Email:</strong> info@euromatire.com
+              <strong>Email:</strong> ctyvoruotxetindat@gmail.com
             </p>
             <p className="text-muted-foreground mb-4">
-              <strong>Điện thoại:</strong> 0123 456 789
+              <strong>Điện thoại:</strong> 0839911148
             </p>
             <div className="w-full h-96 bg-gray-200 mt-4 rounded-md overflow-hidden">
               <iframe
                 title="Bản đồ vị trí công ty"
-                src="https://maps.google.com/maps?q=Đường%2049%2C%20Tân%20Tạo%2C%20Bình%20Tân&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.482486697055!2d106.40924747591076!3d10.850859789302428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310ad6f6e67b4923%3A0x222f2b570a6a0f9a!2zQ8O0bmcgVHkgVE5ISCBN4buZdCBUaMOgbmggVmnDqm4gU-G6o24gWHXhuqV0IFRoxrDGoW5nIE3huqFpIEPGoSBLaMOtIFTDrW4gxJDhuqF0!5e0!3m2!1sen!2s!4v1757559047624!5m2!1sen!2s"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

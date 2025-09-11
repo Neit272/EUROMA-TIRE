@@ -15,9 +15,6 @@
     "ply": {
       "type": "string"
     },
-    "weight": {
-      "type": "string"
-    },
     "diameter": {
       "type": "string"
     },

@@ -8,7 +8,7 @@ import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
 const navLinks = [
-    { href: "/#products", label: "Sản phẩm" },
+    { href: "/gai", label: "Sản phẩm" },
     { href: "/#categories", label: "Loại lốp" },
     { href: "/#contact", label: "Liên hệ" },
     { href: "/about", label: "Về chúng tôi" },
@@ -24,12 +24,12 @@ const Header = () => {
           <Link href="/" className="flex items-center gap-3">
             <Image
               src="/icon.png"
-              alt="Euroma Tire Logo"
+              alt="Euroma Logo"
               width={40}
               height={40}
               className="rounded-full"
             />
-            <span className="text-xl font-bold tracking-wider">EUROMA TIRE</span>
+            <span className="text-xl font-bold tracking-wider">EUROMA</span>
           </Link>
         </div>
 

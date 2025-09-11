@@ -155,16 +155,26 @@ Step 1 → Step 2 → Step 3…
 - **Tối ưu hóa và tích hợp hình ảnh Cloudinary:**
   + Cập nhật `frontend/next.config.mjs` để cho phép domain Cloudinary.
   + Nâng cấp hàm `getImageUrl` trong `frontend/src/lib/strapi.ts` để xử lý `imageUrl` dạng mảng và tạo URL Cloudinary với kích thước chính xác (ví dụ: 400x400 cho lưới, 600x600 cho chi tiết, 1200x400 cho hero) bằng transformation, tối ưu hiệu năng tải ảnh.
+  + **Thêm khả năng quản lý ảnh Hero Carousel và ảnh đại diện cho "Loại lốp" qua Strapi CMS.**
+  + **Triển khai Hero Carousel tự động chạy, tối ưu hiển thị ảnh ngang và mượt mà trên di động.**
+  + **Cập nhật section "Hai loại chính" để hiển thị ảnh nền từ CMS.**
+  + **Tinh chỉnh hàm `getImageUrl` trong `frontend/src/lib/strapi.ts` để xử lý chính xác URL ảnh Cloudinary (bao gồm phiên bản, định dạng, và tối ưu hóa).**
+  + **Cập nhật các hàm fetch dữ liệu (`getLoaiLops`, `getHomepageHeroImageUrls`) để xử lý đúng cấu trúc dữ liệu từ API.**
 
 - **Dọn dẹp code và sửa lỗi build:**
   + Xóa các comment không cần thiết và comment tự sinh bởi AI trên toàn bộ các file code chính trong thư mục `frontend` (bao gồm `src/lib/strapi.ts`, `src/components/sections/*`, `src/app/gai/*`, `src/app/gai/[slug]/*`, `src/app/page.tsx`, `src/app/layout.tsx`, `src/lib/utils.ts`, `src/components/layout/*`).
   + Khắc phục lỗi ESLint (`no-unused-vars`) trong `ContactForm.tsx` và lỗi TypeScript (`no-explicit-any`) trong `strapi.ts` để đảm bảo build thành công trên Vercel.
+  + **Khắc phục lỗi import component (`HeroSection`, `TwoMainTypesSection`) trong `page.tsx`.**
+  + **Xử lý lỗi 404 ảnh Cloudinary bằng cách tinh chỉnh lại logic tạo URL và hướng dẫn đồng bộ dữ liệu ảnh trong CMS.**
+  + **Tối ưu hóa animation carousel trên di động bằng `will-change-transform`.**
+  + **Loại bỏ hiển thị trường "Trọng lượng" khỏi bảng thông số kỹ thuật trong trang chi tiết sản phẩm.**
 
 - **Hoàn thiện UI & Sửa lỗi Form:**
   + Thêm widget "Liên hệ nhanh" (Quick Contact) dạng nút bấm nổi ở góc màn hình, bao gồm các liên kết tới Điện thoại, Zalo, và Messenger.
   + Tích hợp logo công ty vào Header và hướng dẫn sử dụng logo làm favicon cho trang web.
   + Đồng bộ hóa màu sắc chủ đạo trên toàn bộ trang, áp dụng biến màu `--primary` cho các thành phần Footer, Hero Section, và các nút bấm để đảm bảo tính nhất quán (sau đó tạm hoãn chờ khách duyệt).
   + Sửa lỗi form liên hệ: Xử lý trường hợp không nhập email bằng cách loại bỏ trường email rỗng khỏi dữ liệu gửi đi, ngăn chặn lỗi xác thực từ backend.
+  + **Chỉnh sửa link "Sản phẩm" trên Header để dẫn trực tiếp đến trang `/gai`.**
 
 ### 6. Nhật ký công việc đã thực hiện (Backend & Deployment)
 

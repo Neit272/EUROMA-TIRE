@@ -16,7 +16,6 @@ export interface ItemMauMa extends Struct.ComponentSchema {
     treadCount: Schema.Attribute.String;
     treadDepth: Schema.Attribute.String;
     treadWidth: Schema.Attribute.String;
-    weight: Schema.Attribute.String;
   };
 }
 

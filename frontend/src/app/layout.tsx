@@ -9,8 +9,8 @@ import { QuickContact } from "@/components/layout/QuickContact";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Công ty EUROMA TIRE - Uy tín, Chất lượng",
-  description: "EUROMA TIRE - Chuyên cung cấp các loại lốp xe tải, xe máy cày chính hãng. Giá cả cạnh tranh, dịch vụ chuyên nghiệp.",
+  title: "Công ty EUROMA - Uy tín, Chất lượng",
+  description: "EUROMA - Chuyên cung cấp các loại lốp xe tải, xe máy cày chính hãng. Giá cả cạnh tranh, dịch vụ chuyên nghiệp.",
 };
 
 export default function RootLayout({

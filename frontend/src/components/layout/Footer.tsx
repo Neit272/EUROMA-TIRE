@@ -9,9 +9,9 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col items-center md:items-end text-sm">
-          <p>Địa chỉ: 123 Đường ABC, Quận 1, TP. HCM</p>
-          <p>Email: info@euromatire.com</p>
-          <p>Điện thoại: 0123 456 789</p>
+          <p>Địa chỉ: Ấp Thuận Hòa 2, xã Hòa Khánh Nam, Đức Hòa, Long An</p>
+          <p>Email: ctyvoruotxetindat@gmail.com</p>
+          <p>Điện thoại: 0839911148</p>
         </div>
 
       </div>

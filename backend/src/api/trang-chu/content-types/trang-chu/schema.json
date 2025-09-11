@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "trang_chus",
+  "info": {
+    "singularName": "trang-chu",
+    "pluralName": "trang-chus",
+    "displayName": "Trang chủ"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "hero": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}
