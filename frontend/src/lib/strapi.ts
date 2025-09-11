@@ -213,6 +213,55 @@ export async function submitContactForm(formData: ContactFormData): Promise<{ su
     }
 }
 
+export interface AboutPageContent {
+  title: string;
+  content: BlocksContent;
+  heroUrl: string;
+}
+
+export async function getAboutPageContent(): Promise<AboutPageContent> {
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/trang-gioi-thieu?populate=hero`;
+
+    const defaultContent: AboutPageContent = {
+        title: "Về Chúng Tôi",
+        content: [{ type: 'paragraph', children: [{ type: 'text', text: 'Nội dung đang được cập nhật. Vui lòng quay lại sau.' }] }],
+        heroUrl: "https://placehold.co/1200x400/eee/fff?text=EUROMA+TIRE",
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            next: { revalidate: 60 },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch About Us page content');
+        }
+
+        const strapiResponse = await response.json();
+        const data = strapiResponse.data;
+
+        if (!data) {
+            return defaultContent;
+        }
+
+        return {
+            title: data.title || defaultContent.title,
+            content: data.content || defaultContent.content,
+            heroUrl: getImageUrl(data.hero, { width: 1200, height: 400 }), 
+        };
+
+    } catch (error) {
+        console.error("An error occurred while fetching the About Us page:", error);
+        return {
+            ...defaultContent,
+            title: "Lỗi Tải Trang",
+            content: [{ type: 'paragraph', children: [{ type: 'text', text: 'Đã có lỗi xảy ra khi tải nội dung. Vui lòng thử lại.' }] }],
+            heroUrl: "https://placehold.co/1200x400/eee/fff?text=Error",
+        };
+    }
+}
+
 export interface LoaiLop {
   id: number;
   name: string;
