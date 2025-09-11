@@ -23,6 +23,16 @@
       "target": "api::loai-lop.loai-lop",
       "inversedBy": "san_phams"
     },
+    "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
     "imageUrl": {
       "type": "media",
       "multiple": true,

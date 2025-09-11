@@ -68,7 +68,8 @@ interface StrapiProductDataItem {
   updatedAt: string;
   publishedAt: string;
   loai_lop: StrapiLoaiLop;
-  imageUrl: StrapiImage[];
+    imageUrl: StrapiImage[];
+    thumbnail?: StrapiImage | null;
   models: TreadPatternModel[];
 }
 
@@ -124,12 +125,18 @@ export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
         const strapiResponse = await response.json();
 
         const products: TreadPattern[] = strapiResponse.data.map((item: StrapiProductDataItem): TreadPattern => {
+            let thumbnailUrl = "https://placehold.co/400x400/eee/fff.png?text=No+Image";
+            if (item.thumbnail) {
+                thumbnailUrl = getImageUrl([item.thumbnail], { width: 400, height: 400 });
+            } else if (item.imageUrl && Array.isArray(item.imageUrl) && item.imageUrl.length > 0) {
+                thumbnailUrl = getImageUrl([item.imageUrl[0]], { width: 400, height: 400 });
+            }
             return {
                 id: item.slug,
                 name: item.name,
                 type: item.loai_lop?.name || "Chưa phân loại",
                 description: extractDescription(item.description),
-                imageUrl: getImageUrl(item.imageUrl, { width: 400, height: 400 }), 
+                imageUrl: thumbnailUrl,
                 models: item.models,
             };
         });
@@ -162,18 +169,24 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
             return null;
         }
 
-        const item: StrapiProductDataItem = strapiResponse.data[0];
 
-        const product: TreadPattern = {
-            id: item.slug,
-            name: item.name,
-            type: item.loai_lop?.name || "Chưa phân loại",
-            description: extractDescription(item.description),
-            imageUrl: getImageUrl(item.imageUrl, { width: 600, height: 600 }), 
-            models: item.models,
-        };
+                const item: StrapiProductDataItem = strapiResponse.data[0];
 
-        return product;
+                const images: string[] = Array.isArray(item.imageUrl)
+                    ? item.imageUrl.slice(0, 2).map(img => getImageUrl([img], { width: 600, height: 600 }))
+                    : [getImageUrl(item.imageUrl, { width: 600, height: 600 })];
+
+                const product: TreadPattern & { images?: string[] } = {
+                        id: item.slug,
+                        name: item.name,
+                        type: item.loai_lop?.name || "Chưa phân loại",
+                        description: extractDescription(item.description),
+                        imageUrl: images[0],
+                        images,
+                        models: item.models,
+                };
+
+                return product;
 
     } catch (error) {
         console.error(`An error occurred while fetching product with slug ${slug}:`, error);

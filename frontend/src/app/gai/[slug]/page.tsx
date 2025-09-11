@@ -21,5 +21,6 @@ export default async function GaiDetailPage({ params }: GaiDetailPageProps) {
     notFound();
   }
 
+  // Truyền prop images vào ProductDetailView (nếu có)
   return <ProductDetailView pattern={pattern} />;
 }
