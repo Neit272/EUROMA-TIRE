@@ -262,6 +262,12 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
     }
 }
 
+interface StrapiLoaiLopDataItem {
+  id: number;
+  name: string;
+  image: StrapiImage | null;
+}
+
 export interface LoaiLop {
   id: number;
   name: string;
@@ -283,7 +289,7 @@ export async function getLoaiLops(): Promise<LoaiLop[]> {
 
         const strapiResponse = await response.json();
 
-        const loaiLops: LoaiLop[] = strapiResponse.data.map((item: any): LoaiLop => ({
+        const loaiLops: LoaiLop[] = strapiResponse.data.map((item: StrapiLoaiLopDataItem): LoaiLop => ({
             id: item.id,
             name: item.name,
             imageUrl: getImageUrl(item.image ? [item.image] : null, { width: 600, height: 400, crop: 'fill' }),

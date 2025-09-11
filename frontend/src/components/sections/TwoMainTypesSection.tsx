@@ -1,8 +1,3 @@
-import {
-  Card,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
 import { getLoaiLops } from "@/lib/strapi";
 import Link from "next/link";
 
