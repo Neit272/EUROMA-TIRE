@@ -14,8 +14,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { ContactForm } from '@/components/sections/ContactForm';
-import { TreadPattern, TreadPatternModel } from '@/lib/data';
-import { getImageUrl, StrapiImage } from '@/lib/strapi';
+import { TreadPattern, TreadPatternModel, StrapiImage } from '@/lib/data';
+import { getImageUrl } from '@/lib/strapi';
 import { cn } from '@/lib/utils';
 
 interface DisplayImage {
