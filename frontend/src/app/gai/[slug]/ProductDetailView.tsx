@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { ContactForm } from '@/components/sections/ContactForm';
 import { TreadPattern, TreadPatternModel } from '@/lib/data';
-import { getImageUrl } from '@/lib/strapi';
+import { getImageUrl, StrapiImage } from '@/lib/strapi';
 import { cn } from '@/lib/utils';
 
 interface DisplayImage {
@@ -38,13 +38,15 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
     }
   }, [pattern]);
 
-  const displayImages: DisplayImage[] = selectedModel?.images?.map((img: any) => {
-    const imageUrl = getImageUrl([img], { width: 600, height: 600, crop: 'fill' });
-    return { 
-      largeUrl: imageUrl,
-      thumbnailUrl: imageUrl
-    };
-  }) || [];
+  const displayImages: DisplayImage[] = useMemo(() => {
+    return selectedModel?.images?.map((img: StrapiImage) => {
+      const imageUrl = getImageUrl([img], { width: 600, height: 600, crop: 'fill' });
+      return { 
+        largeUrl: imageUrl,
+        thumbnailUrl: imageUrl
+      };
+    }) || [];
+  }, [selectedModel]);
 
   useEffect(() => {
     if (displayImages.length > 0) {
@@ -52,7 +54,7 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
     } else {
       setActiveImageUrl('https://placehold.co/600x600/eee/fff?text=No+Image');
     }
-  }, [selectedModel]);
+  }, [displayImages]);
 
   return (
     <div className="container mx-auto px-4 py-12">

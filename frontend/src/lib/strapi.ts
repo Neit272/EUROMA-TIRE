@@ -1,5 +1,6 @@
 import { TreadPattern, TreadPatternModel } from "./data";
 import { type BlocksContent } from '@strapi/blocks-react-renderer';
+import qs from 'qs';
 
 export interface ContactFormData {
   name: string;
@@ -21,7 +22,7 @@ interface StrapiImageFormat {
   url: string;
 }
 
-interface StrapiImage {
+export interface StrapiImage {
   id: number;
   name: string;
   alternativeText: string | null;
@@ -150,7 +151,6 @@ export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<TreadPattern | null> {
-    const qs = require('qs');
     const query = qs.stringify({
         filters: {
             slug: {
