@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -15,57 +14,86 @@ import {
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { ContactForm } from '@/components/sections/ContactForm';
+import { TreadPattern, TreadPatternModel } from '@/lib/data';
+import { getImageUrl } from '@/lib/strapi';
+import { cn } from '@/lib/utils';
 
-
-import { TreadPattern } from '@/lib/data';
+interface DisplayImage {
+  largeUrl: string;
+  thumbnailUrl: string;
+}
 
 interface ProductDetailViewProps {
-  pattern: TreadPattern & { images?: string[] };
+  pattern: TreadPattern;
 }
 
 export function ProductDetailView({ pattern }: ProductDetailViewProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Ưu tiên lấy mảng images nếu có, fallback về imageUrl cũ
-  const images: string[] = Array.isArray(pattern.images) && pattern.images.length > 0
-    ? pattern.images.slice(0, 2)
-    : [pattern.imageUrl];
-  const [current, setCurrent] = useState(0);
+  const [selectedModel, setSelectedModel] = useState<TreadPatternModel | null>(null);
+  const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
 
-  const handlePrev = () => setCurrent((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  const handleNext = () => setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  useEffect(() => {
+    if (pattern.models && pattern.models.length > 0) {
+      setSelectedModel(pattern.models[0]);
+    }
+  }, [pattern]);
+
+  const displayImages: DisplayImage[] = selectedModel?.images?.map((img: any) => {
+    const imageUrl = getImageUrl([img], { width: 600, height: 600, crop: 'fill' });
+    return { 
+      largeUrl: imageUrl,
+      thumbnailUrl: imageUrl
+    };
+  }) || [];
+
+  useEffect(() => {
+    if (displayImages.length > 0) {
+      setActiveImageUrl(displayImages[0].largeUrl);
+    } else {
+      setActiveImageUrl('https://placehold.co/600x600/eee/fff?text=No+Image');
+    }
+  }, [selectedModel]);
 
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="relative flex items-center justify-center">
-          {images.length > 1 && (
-            <button
-              className="absolute left-0 z-10 p-2 bg-white/80 rounded-full shadow hover:bg-white"
-              onClick={handlePrev}
-              aria-label="Ảnh trước"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <ChevronLeft size={32} />
-            </button>
-          )}
-          <Image
-            src={images[current]}
-            alt={pattern.name}
-            width={600}
-            height={600}
-            className="rounded-lg shadow-lg object-contain"
-          />
-          {images.length > 1 && (
-            <button
-              className="absolute right-0 z-10 p-2 bg-white/80 rounded-full shadow hover:bg-white"
-              onClick={handleNext}
-              aria-label="Ảnh sau"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <ChevronRight size={32} />
-            </button>
-          )}
+        <div className="flex flex-col gap-4">
+          <div className="relative w-full aspect-square bg-gray-100 rounded-lg shadow-lg overflow-hidden">
+            {activeImageUrl ? (
+              <Image
+                src={activeImageUrl}
+                alt={`${pattern.name} - ${selectedModel?.sku || ''}`}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground">Chọn một mẫu mã để xem ảnh</div>
+            )}
+          </div>
+          <div className="flex justify-center gap-3 h-20">
+            {displayImages.length > 0 ? displayImages.map((image) => (
+              <button
+                key={image.thumbnailUrl}
+                onClick={() => setActiveImageUrl(image.largeUrl)}
+                className={cn(
+                  'relative w-20 h-20 rounded-md overflow-hidden border-2 transition-all',
+                  activeImageUrl === image.largeUrl ? 'border-primary shadow-md' : 'border-transparent opacity-60 hover:opacity-100'
+                )}
+              >
+                <Image
+                  src={image.thumbnailUrl}
+                  alt={`Thumbnail for ${pattern.name}`}
+                  fill
+                  className="object-cover"
+                  sizes="80px"
+                />
+              </button>
+            )) : <div className="text-sm text-muted-foreground self-center">Mẫu mã này chưa có hình ảnh.</div>}
+          </div>
         </div>
+
         <div>
           <Badge variant={pattern.type === 'Đi Rừng' ? 'destructive' : 'secondary'}>
             {pattern.type}
@@ -95,12 +123,12 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
               </div>
             </DialogContent>
           </Dialog>
-
         </div>
       </div>
 
       <div className="mt-16">
-        <h2 className="text-3xl font-bold text-center mb-8">Bảng Thông Số Kỹ Thuật</h2>
+        <h2 className="text-3xl font-bold text-center mb-2">Bảng Thông Số Kỹ Thuật</h2>
+        <p className="text-center text-sm text-muted-foreground mb-4">Nhấp vào một dòng để xem hình ảnh chi tiết của từng mẫu mã.</p>
         <div className="border rounded-lg overflow-x-auto">
           <Table>
             <TableHeader>
@@ -117,7 +145,14 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
             </TableHeader>
             <TableBody>
               {pattern.models.map((model) => (
-                <TableRow key={model.sku}>
+                <TableRow 
+                  key={model.sku}
+                  onClick={() => setSelectedModel(model)}
+                  className={cn(
+                    'cursor-pointer transition-colors',
+                    selectedModel?.sku === model.sku && 'bg-accent'
+                  )}
+                >
                   <TableCell>{model.sku}</TableCell>
                   <TableCell>{model.ply}</TableCell>
                   <TableCell>{model.diameter}</TableCell>

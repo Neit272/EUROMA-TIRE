@@ -174,7 +174,13 @@ Step 1 → Step 2 → Step 3…
   + Tích hợp logo công ty vào Header và hướng dẫn sử dụng logo làm favicon cho trang web.
   + Đồng bộ hóa màu sắc chủ đạo trên toàn bộ trang, áp dụng biến màu `--primary` cho các thành phần Footer, Hero Section, và các nút bấm để đảm bảo tính nhất quán (sau đó tạm hoãn chờ khách duyệt).
   + Sửa lỗi form liên hệ: Xử lý trường hợp không nhập email bằng cách loại bỏ trường email rỗng khỏi dữ liệu gửi đi, ngăn chặn lỗi xác thực từ backend.
-  + **Chỉnh sửa link "Sản phẩm" trên Header để dẫn trực tiếp đến trang `/gai`.**
+  + **  + Chỉnh sửa link "Sản phẩm" trên Header để dẫn trực tiếp đến trang `/gai`.
+
+- **Hoàn thiện trang chi tiết sản phẩm & Trang chủ:**
+  + Nâng cấp gallery ảnh trang chi tiết sản phẩm: Thay thế carousel cũ bằng gallery mới cho phép hiển thị ảnh theo từng mẫu mã.
+  + Thêm tính năng tương tác cho bảng thông số: Người dùng có thể nhấp vào từng mẫu mã để xem bộ ảnh tương ứng, với dòng được chọn được làm nổi bật.
+  + Thêm dòng chữ hướng dẫn người dùng chọn mẫu mã để xem ảnh.
+  + Lấy mô tả động cho section "Hai loại chính" trên trang chủ từ CMS thay vì hardcode.**
 
 ### 6. Nhật ký công việc đã thực hiện (Backend & Deployment)
 

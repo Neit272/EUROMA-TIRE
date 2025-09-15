@@ -86,7 +86,7 @@ interface ImageOptions {
   crop?: 'fill' | 'fit';
 }
 
-function getImageUrl(imageData: StrapiImage[] | null, options?: ImageOptions): string {
+export function getImageUrl(imageData: StrapiImage[] | null, options?: ImageOptions): string {
     if (!imageData || imageData.length === 0 || !imageData[0]) {
         return "https://placehold.co/600x600/eee/fff.png?text=No+Image";
     }
@@ -150,7 +150,16 @@ export async function getProductsFromStrapi(): Promise<TreadPattern[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<TreadPattern | null> {
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/san-phams?filters[slug][$eq]=${slug}&populate=*`;
+    const qs = require('qs');
+    const query = qs.stringify({
+        filters: {
+            slug: {
+                $eq: slug,
+            },
+        },
+        populate: ['loai_lop', 'models.images'],
+    });
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/san-phams?${query}`;
 
     try {
         const response = await fetch(url, {
@@ -169,24 +178,18 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
             return null;
         }
 
+        const item: StrapiProductDataItem = strapiResponse.data[0];
 
-                const item: StrapiProductDataItem = strapiResponse.data[0];
+        const product: TreadPattern = {
+            id: item.slug,
+            name: item.name,
+            type: item.loai_lop?.name || "Chưa phân loại",
+            description: extractDescription(item.description),
+            imageUrl: getImageUrl(item.models?.[0]?.images, { width: 400, height: 400 }) || "https://placehold.co/400x400",
+            models: item.models,
+        };
 
-                const images: string[] = Array.isArray(item.imageUrl)
-                    ? item.imageUrl.slice(0, 2).map(img => getImageUrl([img], { width: 600, height: 600 }))
-                    : [getImageUrl(item.imageUrl, { width: 600, height: 600 })];
-
-                const product: TreadPattern & { images?: string[] } = {
-                        id: item.slug,
-                        name: item.name,
-                        type: item.loai_lop?.name || "Chưa phân loại",
-                        description: extractDescription(item.description),
-                        imageUrl: images[0],
-                        images,
-                        models: item.models,
-                };
-
-                return product;
+        return product;
 
     } catch (error) {
         console.error(`An error occurred while fetching product with slug ${slug}:`, error);
@@ -278,17 +281,19 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
 interface StrapiLoaiLopDataItem {
   id: number;
   name: string;
+  description: StrapiDescriptionBlock[];
   image: StrapiImage | null;
 }
 
 export interface LoaiLop {
   id: number;
   name: string;
+  description: string;
   imageUrl: string;
 }
 
 export async function getLoaiLops(): Promise<LoaiLop[]> {
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/loai-lops?populate=image`;
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/loai-lops?fields=name,description&populate=image`;
 
     try {
         const response = await fetch(url, {
@@ -305,6 +310,7 @@ export async function getLoaiLops(): Promise<LoaiLop[]> {
         const loaiLops: LoaiLop[] = strapiResponse.data.map((item: StrapiLoaiLopDataItem): LoaiLop => ({
             id: item.id,
             name: item.name,
+            description: extractDescription(item.description),
             imageUrl: getImageUrl(item.image ? [item.image] : null, { width: 600, height: 400, crop: 'fill' }),
         }));
 

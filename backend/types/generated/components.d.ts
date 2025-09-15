@@ -8,6 +8,7 @@ export interface ItemMauMa extends Struct.ComponentSchema {
   };
   attributes: {
     diameter: Schema.Attribute.String;
+    images: Schema.Attribute.Media<'images', true>;
     inflationPressure: Schema.Attribute.String;
     ply: Schema.Attribute.String;
     sectionWidth: Schema.Attribute.String;

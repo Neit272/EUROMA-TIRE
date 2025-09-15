@@ -32,6 +32,13 @@
     },
     "inflationPressure": {
       "type": "string"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
     }
   },
   "config": {}

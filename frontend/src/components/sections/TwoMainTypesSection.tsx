@@ -10,13 +10,13 @@ export const TwoMainTypesSection = async () => {
   const types = [
     {
       name: "Lốp Đi Rừng",
-      description: "Chinh phục mọi địa hình hiểm trở, từ đường đất đá đến sình lầy.",
+      description: jungleType?.description || "Chinh phục mọi địa hình hiểm trở, từ đường đất đá đến sình lầy.",
       href: "/gai?type=di-rung",
       imageUrl: jungleType?.imageUrl || "https://placehold.co/600x400/222/fff?text=Đi+Rừng",
     },
     {
       name: "Lốp Đi Ruộng",
-      description: "Bám bùn vượt trội, chuyên dụng cho đồng ruộng và các bề mặt mềm.",
+      description: fieldType?.description || "Bám bùn vượt trội, chuyên dụng cho đồng ruộng và các bề mặt mềm.",
       href: "/gai?type=di-ruong",
       imageUrl: fieldType?.imageUrl || "https://placehold.co/600x400/444/fff?text=Đi+Ruộng",
     },
