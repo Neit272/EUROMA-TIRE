@@ -150,7 +150,7 @@ export async function getProductBySlug(slug: string): Promise<TreadPattern | nul
             name: item.name,
             type: item.loai_lop?.name || "Chưa phân loại",
             description: extractDescription(item.description),
-            imageUrl: getImageUrl(item.models?.[0]?.images, { width: 400, height: 400 }) || "https://placehold.co/400x400",
+            imageUrl: getImageUrl(item.models?.[0]?.images ?? null, { width: 400, height: 400 }) || "https://placehold.co/400x400",
             models: item.models,
         };
 
