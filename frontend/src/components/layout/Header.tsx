@@ -18,8 +18,18 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center p-4">
+    <header className="bg-white shadow-md sticky top-0 z-50 relative">
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-contain bg-repeat-x z-[-1]"
+        style={{ backgroundImage: "url(/assets/grass-bg.jpg)" }}
+      ></div>
+      <div className="absolute bottom-0 left-0 w-full h-16 z-[-1] overflow-x-hidden">
+        <div className="animate-tractor absolute bottom-8" style={{ width: '60px' }}>
+            <Image src="/assets/tractor.png" alt="Tractor" width={80} height={80} />
+        </div>
+      </div>
+
+      <div className="container mx-auto flex justify-between items-center p-4 relative z-10">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-3">
             <Image
@@ -27,9 +37,9 @@ const Header = () => {
               alt="Euroma Logo"
               width={40}
               height={40}
-              className="rounded-full"
+              className="rounded-full filter-shadow-white"
             />
-            <span className="text-xl font-bold tracking-wider">EUROMA</span>
+            <span className="text-xl font-bold tracking-wider text-shadow-white-wide">EUROMA</span>
           </Link>
         </div>
 
@@ -37,7 +47,7 @@ const Header = () => {
           <ul className="flex space-x-6 items-center">
             {navLinks.map(link => (
               <li key={link.href}>
-                <Link href={link.href} className="hover:text-blue-600">
+                <Link href={link.href} className="font-semibold hover:text-blue-600 text-shadow-white-wide">
                   {link.label}
                 </Link>
               </li>

@@ -129,4 +129,38 @@
   .animate-scroll {
     animation: scroll 40s linear infinite;
   }
+
+  .text-shadow-white {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+  }
+
+  .text-shadow-white-wide {
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+  }
+
+  .filter-shadow-white {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9));
+  }
+
+  @keyframes move-tractor {
+    0% {
+      transform: translateX(-100px) scaleX(1);
+    }
+    45% {
+      transform: translateX(100vw) scaleX(1);
+    }
+    50% {
+      transform: translateX(100vw) scaleX(-1);
+    }
+    95% {
+      transform: translateX(-100px) scaleX(-1);
+    }
+    100% {
+      transform: translateX(-100px) scaleX(1);
+    }
+  }
+
+  .animate-tractor {
+    animation: move-tractor 25s linear infinite;
+  }
 }

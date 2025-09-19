@@ -176,6 +176,12 @@ Step 1 → Step 2 → Step 3…
   + Sửa lỗi form liên hệ: Xử lý trường hợp không nhập email bằng cách loại bỏ trường email rỗng khỏi dữ liệu gửi đi, ngăn chặn lỗi xác thực từ backend.
   + **  + Chỉnh sửa link "Sản phẩm" trên Header để dẫn trực tiếp đến trang `/gai`.
 
+- **Cải thiện Header:**
+  + Thêm ảnh nền cỏ (`grass-bg.jpg`) lặp lại và ảnh máy cày (`tractor.png`) di chuyển qua lại trên header.
+  + Đảm bảo background và animation không che khuất nội dung header.
+  + Khắc phục lỗi menu di động bị cắt khi mở bằng cách điều chỉnh thuộc tính `overflow-x-hidden`.
+  + Điều chỉnh kích thước background để vừa vặn và lặp lại theo chiều ngang (`bg-contain bg-repeat-x`).
+
 - **Hoàn thiện trang chi tiết sản phẩm & Trang chủ:**
   + Nâng cấp gallery ảnh trang chi tiết sản phẩm: Thay thế carousel cũ bằng gallery mới cho phép hiển thị ảnh theo từng mẫu mã.
   + Thêm tính năng tương tác cho bảng thông số: Người dùng có thể nhấp vào từng mẫu mã để xem bộ ảnh tương ứng, với dòng được chọn được làm nổi bật.
