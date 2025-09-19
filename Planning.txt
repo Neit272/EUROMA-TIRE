@@ -223,16 +223,19 @@ Step 1 → Step 2 → Step 3…
   + Hướng dẫn cấp quyền Public cho API của `Loại lốp` và `Sản phẩm` để frontend và seed script có thể truy cập.
   + Hướng dẫn chạy lại `seed.js` để thêm toàn bộ 17 sản phẩm vào database production.
   + Gỡ lỗi script `seed.js` (sửa lỗi URL sai, xử lý API không trả về dữ liệu do thiếu quyền/dữ liệu).
+  + Tạo script upload ảnh dựa trên slug và size.
 
 - **Dọn dẹp code backend:**
   + Xóa các comment không cần thiết và comment tự sinh bởi AI trong các file code chính của backend (bao gồm `src/api/*` của tất cả các content type và `seed.js`, `config/*`).
 
+- **Hoàn tất Deployment & Domain:**
+  + Trỏ thành công domain `euromatire.com` vào trang web đã deploy trên Vercel.
+
 ### 7. Tình trạng hiện tại & Bước tiếp theo
 
-- **Frontend:** Đã hoàn thiện giao diện, kết nối thành công với backend production và đã được deploy lên Vercel tại địa chỉ `https://euroma-tire.vercel.app`.
+- **Frontend:** Đã hoàn thiện giao diện, kết nối thành công với backend production và đã được deploy lên Vercel. Trang web chính thức hoạt động tại `https://euromatire.com`.
 - **Backend:** Đã được cấu hình, deploy thành công lên Render tại địa chỉ `https://euroma-tire.onrender.com`, và đã có đầy đủ dữ liệu sản phẩm.
-- **Trạng thái Phase 1:** **Hoàn thành.**
+- **Trạng thái Phase 1 & Domain:** **Hoàn thành.**
 
 - **Bước tiếp theo:**
-  1.  **Trỏ Domain:** Hướng dẫn trỏ domain đã mua (ví dụ: từ Namecheap) vào trang web trên Vercel.
-  2.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.
+  1.  **Bắt đầu Phase 2:** Triển khai các tính năng nâng cao như bộ lọc sản phẩm chi tiết, tối ưu SEO, và tích hợp analytics.
