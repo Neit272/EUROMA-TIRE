@@ -10,7 +10,19 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Công ty EUROMA - Uy tín, Chất lượng",
-  description: "EUROMA - Chuyên cung cấp các loại lốp xe tải, xe máy cày chính hãng. Giá cả cạnh tranh, dịch vụ chuyên nghiệp.",
+  description: "EUROMA - Chuyên cung cấp các loại lốp xe máy cày chính hãng. Giá cả cạnh tranh, dịch vụ chuyên nghiệp.",
+  openGraph: {
+    title: "Công ty EUROMA - Uy tín, Chất lượng",
+    description: "EUROMA - Chuyên cung cấp các loại lốp xe máy cày chính hãng. Giá cả cạnh tranh, dịch vụ chuyên nghiệp.",
+    images: [
+      {
+        url: "/icon.png",
+        width: 40,
+        height: 40,
+        alt: "Euroma Logo",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
