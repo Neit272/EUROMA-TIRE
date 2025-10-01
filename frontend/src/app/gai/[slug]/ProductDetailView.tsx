@@ -17,6 +17,7 @@ import { ContactForm } from '@/components/sections/ContactForm';
 import { TreadPattern, TreadPatternModel, StrapiImage } from '@/lib/data';
 import { getImageUrl } from '@/lib/strapi';
 import { cn } from '@/lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface DisplayImage {
   largeUrl: string;
@@ -31,6 +32,14 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<TreadPatternModel | null>(null);
   const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Touch/swipe states
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  
+  // Auto-play state
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
     if (pattern.models && pattern.models.length > 0) {
@@ -50,50 +59,206 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
 
   useEffect(() => {
     if (displayImages.length > 0) {
+      setCurrentImageIndex(0);
       setActiveImageUrl(displayImages[0].largeUrl);
+      setIsAutoPlaying(true); // Bắt đầu auto-play khi có ảnh
     } else {
       setActiveImageUrl('https://placehold.co/600x600/eee/fff?text=No+Image');
+      setIsAutoPlaying(false);
     }
   }, [displayImages]);
+
+  // Auto-play effect
+  useEffect(() => {
+    if (!isAutoPlaying || displayImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      nextImage();
+    }, 5000); // 5 giây
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, currentImageIndex, displayImages.length]);
+
+  // Function để chuyển đến ảnh cụ thể
+  const goToImage = (index: number) => {
+    if (index >= 0 && index < displayImages.length) {
+      setCurrentImageIndex(index);
+      setActiveImageUrl(displayImages[index].largeUrl);
+      // Tạm dừng auto-play khi user tương tác
+      setIsAutoPlaying(false);
+      // Khởi động lại auto-play sau 10 giây
+      setTimeout(() => setIsAutoPlaying(true), 10000);
+    }
+  };
+
+  // Function để chuyển ảnh tiếp theo
+  const nextImage = () => {
+    if (displayImages.length === 0) return;
+    const nextIndex = (currentImageIndex + 1) % displayImages.length;
+    setCurrentImageIndex(nextIndex);
+    setActiveImageUrl(displayImages[nextIndex].largeUrl);
+  };
+
+  // Function để chuyển ảnh trước
+  const prevImage = () => {
+    if (displayImages.length === 0) return;
+    const prevIndex = currentImageIndex === 0 ? displayImages.length - 1 : currentImageIndex - 1;
+    setCurrentImageIndex(prevIndex);
+    setActiveImageUrl(displayImages[prevIndex].largeUrl);
+  };
+
+  // Touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsAutoPlaying(false); // Tạm dừng auto-play khi user touch
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && displayImages.length > 1) {
+      nextImage();
+    }
+    if (isRightSwipe && displayImages.length > 1) {
+      prevImage();
+    }
+    
+    // Khởi động lại auto-play sau 10 giây
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+    
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="flex flex-col gap-4">
+          {/* Main carousel container */}
           <div className="relative w-full aspect-square bg-gray-100 rounded-lg shadow-lg overflow-hidden">
-            {activeImageUrl ? (
-              <Image
-                src={activeImageUrl}
-                alt={`${pattern.name} - ${selectedModel?.sku || ''}`}
-                fill
-                className="object-contain"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-              />
+            {displayImages.length > 0 ? (
+              <>
+                {/* Carousel images container */}
+                <div 
+                  className="relative w-full h-full select-none"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <div 
+                    className="flex transition-transform duration-500 ease-in-out h-full"
+                    style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
+                  >
+                    {displayImages.map((image, index) => (
+                      <div key={index} className="w-full h-full flex-shrink-0 relative">
+                        <Image
+                          src={image.largeUrl}
+                          alt={`${pattern.name} - Ảnh ${index + 1}`}
+                          fill
+                          className="object-contain pointer-events-none"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          priority={index === 0}
+                          draggable={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Auto-play indicator */}
+                {displayImages.length > 1 && isAutoPlaying && (
+                  <div className="absolute top-4 right-4 bg-black/60 text-white px-2 py-1 rounded-full text-xs">
+                    Auto
+                  </div>
+                )}
+
+                {/* Swipe instruction - chỉ hiện trên mobile */}
+                {displayImages.length > 1 && (
+                  <div className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white/70 text-xs md:hidden pointer-events-none">
+                    ← Vuốt
+                  </div>
+                )}
+                {displayImages.length > 1 && (
+                  <div className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white/70 text-xs md:hidden pointer-events-none">
+                    Vuốt →
+                  </div>
+                )}
+
+                {/* Dots indicator - chỉ hiện khi có nhiều hơn 1 ảnh */}
+                {displayImages.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                    {displayImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => goToImage(index)}
+                        className={cn(
+                          "w-3 h-3 rounded-full transition-all duration-300 hover:scale-125",
+                          currentImageIndex === index 
+                            ? "bg-white shadow-lg scale-110" 
+                            : "bg-white/60 hover:bg-white/80"
+                        )}
+                        aria-label={`Xem ảnh ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-muted-foreground">Chọn một mẫu mã để xem ảnh</div>
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                Chọn một mẫu mã để xem ảnh
+              </div>
             )}
           </div>
-          <div className="flex justify-center gap-3 h-20">
-            {displayImages.length > 0 ? displayImages.map((image) => (
-              <button
-                key={image.thumbnailUrl}
-                onClick={() => setActiveImageUrl(image.largeUrl)}
-                className={cn(
-                  'relative w-20 h-20 rounded-md overflow-hidden border-2 transition-all',
-                  activeImageUrl === image.largeUrl ? 'border-primary shadow-md' : 'border-transparent opacity-60 hover:opacity-100'
-                )}
-              >
-                <Image
-                  src={image.thumbnailUrl}
-                  alt={`Thumbnail for ${pattern.name}`}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                />
-              </button>
-            )) : <div className="text-sm text-muted-foreground self-center">Mẫu mã này chưa có hình ảnh.</div>}
-          </div>
+          {/* Thumbnail navigation */}
+          {displayImages.length > 0 && (
+            <div className="flex justify-center gap-3 h-20">
+              {displayImages.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToImage(index)}
+                  className={cn(
+                    'relative w-20 h-20 rounded-md overflow-hidden border-2 transition-all duration-300',
+                    currentImageIndex === index 
+                      ? 'border-primary shadow-md scale-105' 
+                      : 'border-transparent opacity-60 hover:opacity-100 hover:scale-105'
+                  )}
+                  aria-label={`Xem ảnh ${index + 1} của ${pattern.name}`}
+                >
+                  <Image
+                    src={image.thumbnailUrl}
+                    alt={`Thumbnail ${index + 1} for ${pattern.name}`}
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {/* Instructions */}
+          {displayImages.length > 1 && (
+            <div className="text-xs text-muted-foreground text-center">
+              <span className="md:hidden">Vuốt trái/phải để chuyển ảnh</span>
+              <span className="hidden md:inline">Click thumbnails để chuyển ảnh</span>
+            </div>
+          )}
+          
+          {/* No images message */}
+          {displayImages.length === 0 && (
+            <div className="text-sm text-muted-foreground text-center">
+              Mẫu mã này chưa có hình ảnh.
+            </div>
+          )}
         </div>
 
         <div>

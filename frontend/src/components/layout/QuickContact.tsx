@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Phone, MessageCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
