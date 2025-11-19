@@ -58,17 +58,13 @@ export function getImageUrl(imageData: StrapiImage[] | null, options?: ImageOpti
     }
     const image = imageData[0];
 
-    if (options && image.provider === 'cloudinary' && image.url) {
-        const transformations = `w_${options.width},h_${options.height},c_${options.crop || 'fill'},q_auto,f_auto`;
-        if (image.url.includes('/upload/')) {
+    if (image.url) {
+        if (options && image.provider === 'cloudinary' && image.url.includes('/upload/')) {
+            const transformations = `w_${options.width},h_${options.height},c_${options.crop || 'fill'},q_auto,f_auto`;
             return image.url.replace('/upload/', `/upload/${transformations}/`);
         }
-    }
-
-    if (image.url) {
-        const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
-        const fallbackUrl = image.formats?.medium?.url || image.url;
-        return fallbackUrl.startsWith('http') ? fallbackUrl : `${strapiUrl}${fallbackUrl}`;
+        
+        return image.url.startsWith('http') ? image.url : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${image.url}`;
     }
 
     return "https://placehold.co/600x600/eee/fff.png?text=No+Image";

@@ -11,11 +11,12 @@ export async function generateStaticParams() {
 }
 
 interface GaiDetailPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function GaiDetailPage({ params }: GaiDetailPageProps) {
-  const pattern = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const pattern = await getProductBySlug(slug);
 
   if (!pattern) {
     notFound();

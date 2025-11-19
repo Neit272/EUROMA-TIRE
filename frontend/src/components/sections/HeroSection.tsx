@@ -8,12 +8,12 @@ export function HeroSection() {
           EUROMA TIRE - VỮNG BƯỚC THÀNH CÔNG
         </h1>
         <p className="mt-4 text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-3xl mx-auto">
-          Nhà phân phối lốp xe tải, xe nông nghiệp và công nghiệp hàng đầu. Chúng tôi cam kết mang đến sản phẩm chất lượng, độ bền cao và dịch vụ khách hàng vượt trội.
+          Nhà phân phối lốp xe máy cày, xe nông nghiệp và công nghiệp hàng đầu. Chúng tôi cam kết mang đến sản phẩm chất lượng, độ bền cao và dịch vụ khách hàng vượt trội.
         </p>
       </div>
-      <div className="mt-8 md:mt-12">
+      {/* <div className="mt-8 md:mt-12">
         <HeroCarousel />
-      </div>
+      </div> */}
     </section>
   );
 }

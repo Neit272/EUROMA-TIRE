@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { QuickContact } from "@/components/layout/QuickContact";
+import { LoadingScreen } from "@/components/layout/LoadingScreen";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
+        <LoadingScreen />
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-grow">{children}</main>

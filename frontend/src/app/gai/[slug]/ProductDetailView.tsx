@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
+import Lightbox from 'yet-another-react-lightbox';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import 'yet-another-react-lightbox/styles.css';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -17,11 +20,12 @@ import { ContactForm } from '@/components/sections/ContactForm';
 import { TreadPattern, TreadPatternModel, StrapiImage } from '@/lib/data';
 import { getImageUrl } from '@/lib/strapi';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ZoomIn, Expand } from 'lucide-react';
 
 interface DisplayImage {
   largeUrl: string;
   thumbnailUrl: string;
+  originalUrl: string;
 }
 
 interface ProductDetailViewProps {
@@ -33,6 +37,8 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
   const [selectedModel, setSelectedModel] = useState<TreadPatternModel | null>(null);
   const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   
   // Touch/swipe states
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -50,9 +56,20 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
   const displayImages: DisplayImage[] = useMemo(() => {
     return selectedModel?.images?.map((img: StrapiImage) => {
       const imageUrl = getImageUrl([img], { width: 600, height: 600, crop: 'fill' });
+      
+      // Get the large format URL and ensure it's converted to a web-friendly format
+      let originalUrl = img.formats?.large?.url || img.url || imageUrl;
+      
+      // If it's a Cloudinary URL, force conversion to JPEG for browser compatibility
+      if (originalUrl.includes('cloudinary.com') && originalUrl.includes('/upload/')) {
+        // Add f_auto (auto format) or f_jpg to convert HEIC to JPEG
+        originalUrl = originalUrl.replace('/upload/', '/upload/f_jpg,q_auto/');
+      }
+      
       return { 
         largeUrl: imageUrl,
-        thumbnailUrl: imageUrl
+        thumbnailUrl: imageUrl,
+        originalUrl: originalUrl
       };
     }) || [];
   }, [selectedModel]);
@@ -159,16 +176,28 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
                     style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
                   >
                     {displayImages.map((image, index) => (
-                      <div key={index} className="w-full h-full flex-shrink-0 relative">
+                      <div 
+                        key={index} 
+                        className="w-full h-full flex-shrink-0 relative group cursor-pointer"
+                        onClick={() => {
+                          setLightboxIndex(index);
+                          setLightboxOpen(true);
+                        }}
+                      >
                         <Image
                           src={image.largeUrl}
                           alt={`${pattern.name} - Ảnh ${index + 1}`}
                           fill
-                          className="object-contain pointer-events-none"
+                          className="object-contain"
                           sizes="(max-width: 768px) 100vw, 50vw"
                           priority={index === 0}
-                          draggable={false}
                         />
+                        {/* Zoom hint overlay */}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+                          <div className="bg-white/90 rounded-full p-3 shadow-lg">
+                            <Expand className="w-6 h-6 text-gray-700" />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -246,10 +275,15 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
           )}
           
           {/* Instructions */}
-          {displayImages.length > 1 && (
-            <div className="text-xs text-muted-foreground text-center">
-              <span className="md:hidden">Vuốt trái/phải để chuyển ảnh</span>
-              <span className="hidden md:inline">Click thumbnails để chuyển ảnh</span>
+          {displayImages.length > 0 && (
+            <div className="text-xs text-muted-foreground text-center space-y-1">
+              <p className="font-medium">Nhấp vào ảnh để xem ảnh gốc toàn màn hình</p>
+              {displayImages.length > 1 && (
+                <p>
+                  <span className="md:hidden">Vuốt trái/phải để chuyển ảnh</span>
+                  <span className="hidden md:inline">Click thumbnails để chuyển ảnh</span>
+                </p>
+              )}
             </div>
           )}
           
@@ -334,6 +368,29 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
           </Table>
         </div>
       </div>
+
+      {/* Fullscreen Image Lightbox */}
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        index={lightboxIndex}
+        slides={displayImages.map((img) => ({
+          src: img.originalUrl,
+          alt: pattern.name,
+        }))}
+        plugins={[Zoom]}
+        zoom={{
+          maxZoomPixelRatio: 3,
+          zoomInMultiplier: 2,
+          doubleTapDelay: 300,
+          doubleClickDelay: 300,
+          doubleClickMaxStops: 2,
+          keyboardMoveDistance: 50,
+          wheelZoomDistanceFactor: 100,
+          pinchZoomDistanceFactor: 100,
+          scrollToZoom: true,
+        }}
+      />
     </div>
   );
 }
