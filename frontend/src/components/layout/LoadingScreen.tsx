@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
-export function LoadingScreen() {
+function LoadingScreenContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
   const pathname = usePathname();
@@ -71,5 +71,13 @@ export function LoadingScreen() {
         <p className="text-sm text-muted-foreground animate-pulse">Đang tải...</p>
       </div>
     </div>
+  );
+}
+
+export function LoadingScreen() {
+  return (
+    <Suspense fallback={null}>
+      <LoadingScreenContent />
+    </Suspense>
   );
 }
