@@ -11,9 +11,6 @@ export function HeroSection() {
           Nhà phân phối lốp xe máy cày, xe nông nghiệp và công nghiệp hàng đầu. Chúng tôi cam kết mang đến sản phẩm chất lượng, độ bền cao và dịch vụ khách hàng vượt trội.
         </p>
       </div>
-      {/* <div className="mt-8 md:mt-12">
-        <HeroCarousel />
-      </div> */}
     </section>
   );
 }

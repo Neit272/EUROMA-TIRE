@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
@@ -30,39 +31,52 @@ interface DisplayImage {
 
 interface ProductDetailViewProps {
   pattern: TreadPattern;
+  selectedSku?: string;
 }
 
-export function ProductDetailView({ pattern }: ProductDetailViewProps) {
+export function ProductDetailView({ pattern, selectedSku }: ProductDetailViewProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<TreadPatternModel | null>(null);
   const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  
-  // Touch/swipe states
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  
-  // Auto-play state
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const updateUrlWithSku = (sku: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('sku', sku);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
+  const handleModelSelect = (model: TreadPatternModel) => {
+    setSelectedModel(model);
+    if (model.sku) {
+      updateUrlWithSku(model.sku);
+    }
+  };
 
   useEffect(() => {
     if (pattern.models && pattern.models.length > 0) {
-      setSelectedModel(pattern.models[0]);
+      if (selectedSku) {
+        const modelToSelect = pattern.models.find(m => m.sku === selectedSku);
+        setSelectedModel(modelToSelect || pattern.models[0]);
+      } else {
+        setSelectedModel(pattern.models[0]);
+      }
     }
-  }, [pattern]);
+  }, [pattern, selectedSku]);
 
   const displayImages: DisplayImage[] = useMemo(() => {
     return selectedModel?.images?.map((img: StrapiImage) => {
       const imageUrl = getImageUrl([img], { width: 600, height: 600, crop: 'fill' });
-      
-      // Get the large format URL and ensure it's converted to a web-friendly format
       let originalUrl = img.formats?.large?.url || img.url || imageUrl;
       
-      // If it's a Cloudinary URL, force conversion to JPEG for browser compatibility
       if (originalUrl.includes('cloudinary.com') && originalUrl.includes('/upload/')) {
-        // Add f_auto (auto format) or f_jpg to convert HEIC to JPEG
         originalUrl = originalUrl.replace('/upload/', '/upload/f_jpg,q_auto/');
       }
       
@@ -78,37 +92,32 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
     if (displayImages.length > 0) {
       setCurrentImageIndex(0);
       setActiveImageUrl(displayImages[0].largeUrl);
-      setIsAutoPlaying(true); // Bắt đầu auto-play khi có ảnh
+      setIsAutoPlaying(true);
     } else {
       setActiveImageUrl('https://placehold.co/600x600/eee/fff?text=No+Image');
       setIsAutoPlaying(false);
     }
   }, [displayImages]);
 
-  // Auto-play effect
   useEffect(() => {
     if (!isAutoPlaying || displayImages.length <= 1) return;
 
     const interval = setInterval(() => {
       nextImage();
-    }, 5000); // 5 giây
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isAutoPlaying, currentImageIndex, displayImages.length]);
 
-  // Function để chuyển đến ảnh cụ thể
   const goToImage = (index: number) => {
     if (index >= 0 && index < displayImages.length) {
       setCurrentImageIndex(index);
       setActiveImageUrl(displayImages[index].largeUrl);
-      // Tạm dừng auto-play khi user tương tác
       setIsAutoPlaying(false);
-      // Khởi động lại auto-play sau 10 giây
       setTimeout(() => setIsAutoPlaying(true), 10000);
     }
   };
 
-  // Function để chuyển ảnh tiếp theo
   const nextImage = () => {
     if (displayImages.length === 0) return;
     const nextIndex = (currentImageIndex + 1) % displayImages.length;
@@ -116,7 +125,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
     setActiveImageUrl(displayImages[nextIndex].largeUrl);
   };
 
-  // Function để chuyển ảnh trước
   const prevImage = () => {
     if (displayImages.length === 0) return;
     const prevIndex = currentImageIndex === 0 ? displayImages.length - 1 : currentImageIndex - 1;
@@ -124,11 +132,10 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
     setActiveImageUrl(displayImages[prevIndex].largeUrl);
   };
 
-  // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-    setIsAutoPlaying(false); // Tạm dừng auto-play khi user touch
+    setIsAutoPlaying(false);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -149,7 +156,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
       prevImage();
     }
     
-    // Khởi động lại auto-play sau 10 giây
     setTimeout(() => setIsAutoPlaying(true), 10000);
     
     setTouchStart(null);
@@ -192,7 +198,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
                           sizes="(max-width: 768px) 100vw, 50vw"
                           priority={index === 0}
                         />
-                        {/* Zoom hint overlay */}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
                           <div className="bg-white/90 rounded-full p-3 shadow-lg">
                             <Expand className="w-6 h-6 text-gray-700" />
@@ -203,14 +208,12 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
                   </div>
                 </div>
 
-                {/* Auto-play indicator */}
                 {displayImages.length > 1 && isAutoPlaying && (
                   <div className="absolute top-4 right-4 bg-black/60 text-white px-2 py-1 rounded-full text-xs">
                     Auto
                   </div>
                 )}
 
-                {/* Swipe instruction - chỉ hiện trên mobile */}
                 {displayImages.length > 1 && (
                   <div className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white/70 text-xs md:hidden pointer-events-none">
                     ← Vuốt
@@ -222,7 +225,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
                   </div>
                 )}
 
-                {/* Dots indicator - chỉ hiện khi có nhiều hơn 1 ảnh */}
                 {displayImages.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
                     {displayImages.map((_, index) => (
@@ -247,7 +249,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
               </div>
             )}
           </div>
-          {/* Thumbnail navigation */}
           {displayImages.length > 0 && (
             <div className="flex justify-center gap-3 h-20">
               {displayImages.map((image, index) => (
@@ -274,7 +275,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
             </div>
           )}
           
-          {/* Instructions */}
           {displayImages.length > 0 && (
             <div className="text-xs text-muted-foreground text-center space-y-1">
               <p className="font-medium">Nhấp vào ảnh để xem ảnh gốc toàn màn hình</p>
@@ -287,7 +287,6 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
             </div>
           )}
           
-          {/* No images message */}
           {displayImages.length === 0 && (
             <div className="text-sm text-muted-foreground text-center">
               Mẫu mã này chưa có hình ảnh.
@@ -348,7 +347,7 @@ export function ProductDetailView({ pattern }: ProductDetailViewProps) {
               {pattern.models.map((model) => (
                 <TableRow 
                   key={model.sku}
-                  onClick={() => setSelectedModel(model)}
+                  onClick={() => handleModelSelect(model)}
                   className={cn(
                     'cursor-pointer transition-colors',
                     selectedModel?.sku === model.sku && 'bg-accent'

@@ -58,7 +58,6 @@ export type TreadPattern = {
   models: TreadPatternModel[];
 };
 
-// This is the single source of truth for product data.
 export const treadPatterns: TreadPattern[] = [
   {
     id: "an-do-jk",

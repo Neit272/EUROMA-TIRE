@@ -10,7 +10,6 @@ function LoadingScreenContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Handle initial page load
   useEffect(() => {
     const handleComplete = () => {
       setTimeout(() => setIsLoading(false), 300);
@@ -24,11 +23,9 @@ function LoadingScreenContent() {
     }
   }, []);
 
-  // Handle route changes (page navigation)
   useEffect(() => {
     setIsNavigating(true);
     
-    // Minimum loading time to prevent flash
     const minLoadingTime = setTimeout(() => {
       setIsNavigating(false);
     }, 800);
@@ -36,7 +33,6 @@ function LoadingScreenContent() {
     return () => clearTimeout(minLoadingTime);
   }, [pathname, searchParams]);
 
-  // Add click listener to detect navigation starts
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;

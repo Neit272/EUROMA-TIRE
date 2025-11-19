@@ -6,6 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import { SearchBar } from './SearchBar';
 
 const navLinks = [
     { href: "/gai", label: "Sản phẩm" },
@@ -43,17 +44,23 @@ const Header = () => {
           </Link>
         </div>
 
-        <nav className="hidden md:flex">
-          <ul className="flex space-x-6 items-center">
-            {navLinks.map(link => (
-              <li key={link.href}>
-                <Link href={link.href} className="font-semibold hover:text-blue-600 text-shadow-white-wide">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex items-center gap-2">
+          <div className="hidden md:block">
+            <SearchBar />
+          </div>
+          
+          <nav className="hidden md:flex">
+            <ul className="flex space-x-6 items-center">
+              {navLinks.map(link => (
+                <li key={link.href}>
+                  <Link href={link.href} className="font-semibold hover:text-blue-600 text-shadow-white-wide">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
 
         <div className="md:hidden">
           <Collapsible open={isOpen} onOpenChange={setIsOpen} className="relative">
@@ -76,6 +83,10 @@ const Header = () => {
                     {link.label}
                   </Link>
                 ))}
+                
+                <div className="border-t mt-2 pt-2 px-3 pb-3">
+                  <SearchBar isMobile={true} onResultClick={() => setIsOpen(false)} />
+                </div>
               </div>
             </CollapsibleContent>
           </Collapsible>

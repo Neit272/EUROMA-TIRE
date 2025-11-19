@@ -12,7 +12,6 @@ export async function HeroCarousel() {
     );
   }
 
-  // Duplicate the images to create a seamless loop
   const duplicatedUrls = [...imageUrls, ...imageUrls];
 
   return (
